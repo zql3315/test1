@@ -10,9 +10,10 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import net.sf.json.JSONObject;
+
 import org.junit.Test;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Binarizer;
 import com.google.zxing.BinaryBitmap;
@@ -48,7 +49,7 @@ public class QRCodeTest {
         JSONObject json = new JSONObject();
         json.put("zxing", "https://github.com/zxing/zxing/tree/zxing-3.0.0/javase/src/main/java/com/google/zxing");
         json.put("author", "shihy");
-        String content = json.toJSONString();// 内容
+        String content = json.toString();// 内容
         int width = 200; // 图像宽度
         int height = 200; // 图像高度
         String format = "png";// 图像类型
@@ -76,7 +77,7 @@ public class QRCodeTest {
             Map<DecodeHintType, Object> hints = new HashMap<DecodeHintType, Object>();
             hints.put(DecodeHintType.CHARACTER_SET, "UTF-8");
             Result result = new MultiFormatReader().decode(binaryBitmap, hints);// 对图像进行解码
-            JSONObject content = JSONObject.parseObject(result.getText());
+            JSONObject content = JSONObject.fromObject(result.getText());
             System.out.println("图片中内容：  ");
             System.out.println("author： " + content.getString("author"));
             System.out.println("zxing：  " + content.getString("zxing"));

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+	<size>8</size>
+	<dataType>com.infosky.slm.house.entity.dto.DmsHouseSaleLHDTO</dataType>
+	<leaf>
+		<name>lhName</name>
+		<position>0</position>
+		<desc>楼号名称</desc>
+	</leaf>
+	<leaf>
+		<name>roomMount</name>
+		<position>1</position>
+		<convert>com.infosky.slm.sys.service.String2Integer</convert>
+		<desc>共计多少房</desc>
+	</leaf>
+	<leaf>
+		<name>saleMount</name>
+		<position>2</position>
+		<convert>com.infosky.slm.sys.service.String2Integer</convert>
+		<desc>已售多少房</desc>
+	</leaf>
+	<leaf>
+		<name>roomNum</name>
+		<position>3</position>
+		<convert>com.infosky.slm.sys.service.String2Integer</convert>
+		<desc>剩余多少房</desc>
+	</leaf>
+	<leaf>
+		<name>xsCert</name>
+		<position>4</position>
+		<desc>销售许可证</desc>
+	</leaf>
+	<leaf>
+		<name>ghCert</name>
+		<position>5</position>
+		<desc>规划许可证</desc>
+	</leaf>
+	<leaf>
+		<name>sgCert</name>
+		<position>6</position>
+		<desc>施工许可证</desc>
+	</leaf>
+	<leaf>
+		<name>levelInfo</name>
+		<position>7</position>
+		<desc>剩地上/地下楼层数</desc>
+	</leaf>
+	
+</node>

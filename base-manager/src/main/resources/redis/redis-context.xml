@@ -1,0 +1,139 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
+         ">
+
+    <context:component-scan base-package="com.infosky.redis"></context:component-scan>
+    
+    <!-- 单机环境实现 -->
+	<!-- <bean id="redisUtilsService" class="com.infosky.redis.jedis.JedisTemplate" /> -->
+	<!-- 分片实现 -->
+	<bean id="redisUtilsService" class="com.infosky.redis.shard.RedisShardTemplate" />
+	<!-- 集群实现 -->
+	<!-- <bean id="redisUtilsService" class="com.infosky.redis.cluster.RedisClusterTemplate" /> -->
+    
+    <!-- master连接池参数 -->
+    <bean id="masterPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!-- 2.4以上 版本没有下面两项 
+        <property name="maxActive" value="${redis.maxActive}" />
+        <property name="maxWait" value="${redis.maxWait}" />-->
+        <property name="maxIdle" value="${redis.maxIdle}" /><!-- 最大能够保持idel状态的对象数  -->
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" /><!-- 当调用borrow Object方法时，是否进行有效性检查 -->
+        <!-- 2.4以上 版本 -->
+        <property name="maxTotal" value="${redis.maxActive}" /><!-- 最大分配的对象数 -->
+        <property name="maxWaitMillis" value="${redis.maxWait}" /><!-- 最大等待时间 -->
+    </bean>
+    <!-- 主机地址 -->
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg index="0" ref="masterPoolConfig" />
+        <constructor-arg index="1" value="${redis.host}" type="java.lang.String"/>
+        <constructor-arg index="2" value="${redis.port}" type="int" />
+        <constructor-arg index="3" value="${redis.timeout}" />
+        <constructor-arg index="4" value="${redis.pass}" />
+		<constructor-arg index="5" value="${redis.db}" />
+    </bean>
+
+    <!-- redis 分片配置 start -->
+    <!-- slave连接池参数 -->
+    <bean id="slavePoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!-- 2.4 版本没有下面两项 
+        <property name="maxActive" value="50" />
+        <property name="maxWait" value="1000" /> -->
+        <property name="maxIdle" value="${redis.maxIdle}" /><!-- 最大能够保持idel状态的对象数  -->
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" /><!-- 当调用borrow Object方法时，是否进行有效性检查 -->
+        <!-- 2.4 版本 -->
+        <property name="maxTotal" value="${redis.maxActive}" /><!-- 最大分配的对象数 -->
+        <property name="maxWaitMillis" value="${redis.maxWait}" /><!-- 最大等待时间 -->
+        <property name="testWhileIdle" value="false" /><!-- 在空闲时检查有效性, 默认false -->
+    </bean>
+    <!-- 分片1 -->
+    <bean id="shardInfo-0" class="redis.clients.jedis.JedisShardInfo">
+        <constructor-arg name="host" value="${shardredis.host1}" />
+		<property name="connectionTimeout" value="${redis.timeout}"></property>
+    </bean>
+    <bean id="shardInfo-1" class="redis.clients.jedis.JedisShardInfo">
+        <constructor-arg name="host" value="${shardredis.host2}" />
+		<property name="connectionTimeout" value="${redis.timeout}"></property>
+    </bean>
+
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
+        <constructor-arg index="0" ref="slavePoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <ref bean="shardInfo-0" />
+                <ref bean="shardInfo-1" />
+            </list>
+        </constructor-arg>
+    </bean>
+    <!-- redis 分片配置 end  -->
+    
+    <!-- redis 集群配置 start -->
+    
+    <bean id="culster7000" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="32.1.31.143" />
+        <constructor-arg name="port" value="7000" />
+    </bean>
+    <bean id="culster7001" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="32.1.31.143" />
+        <constructor-arg name="port" value="7001" />
+    </bean>
+    <bean id="culster7002" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="32.1.31.143" />
+        <constructor-arg name="port" value="7002" />
+    </bean>
+    <bean id="culster8000" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="32.1.31.196" />
+        <constructor-arg name="port" value="8000" />
+    </bean>
+    <bean id="culster8001" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="32.1.31.196" />
+        <constructor-arg name="port" value="8001" />
+    </bean>
+    <bean id="culster8002" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="32.1.31.196" />
+        <constructor-arg name="port" value="8002" />
+    </bean>
+    
+    <bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+        <property name="maxTotal" value="${redis.maxActive}" />
+        <property name="minIdle" value="${redis.minIdle}" />
+        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+        <property name="testOnReturn" value="true" />
+        <property name="testWhileIdle" value="true" />
+    </bean>
+
+    <bean id="jedisCluster" class="redis.clients.jedis.JedisCluster">
+        <constructor-arg name="nodes">
+            <set>
+                <ref bean="culster7000" />
+                <ref bean="culster7001" />
+                <ref bean="culster7002" />
+                <ref bean="culster8000" />
+                <ref bean="culster8001" />
+                <ref bean="culster8002" />
+            </set>
+        </constructor-arg>
+        <constructor-arg name="timeout" value="3000"> </constructor-arg>
+        <constructor-arg name="poolConfig"> <ref bean="genericObjectPoolConfig" /> </constructor-arg>
+    </bean>
+    
+   <!--  <bean id="jedisCluster" class="com.infosky.common.util.redis.JedisClusterFactory">
+        <property name="addressConfig">
+            <value>classpath:redis-cluster-config.properties</value>
+        </property>
+        <property name="addressKeyPrefix" value="address" />
+        <property name="timeout" value="300000" />
+        <property name="maxRedirections" value="6" />
+        <property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
+    </bean> -->
+    <!-- redis 集群配置 end -->
+
+</beans>	

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<excel>  
+   <entity code="cooperative" class="com.infosky.hn.cooperative.entity.dto.CooperativeDTO">     
+        <column cell="0" code="name"></column>
+        <column cell="1" code="profile"></column>   
+        <column cell="2" code="province"></column>
+        <column cell="3" code="city"></column>
+        <column cell="4" code="region"></column>
+        <column cell="5" code="townShip"></column>
+        <column cell="6" code="address"></column>
+        <column cell="7" code="serviceNum"></column>
+        <column cell="8" code="memberNum"></column>
+        <column cell="9" code="mainBusiness"></column>
+   </entity>  
+</excel>  

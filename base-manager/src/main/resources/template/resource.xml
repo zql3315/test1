@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+	<size>4</size>
+	<dataType>com.infosky.sys.entity.dto.ResourceDTO</dataType>
+	<leaf>
+		<name>id</name>
+		<position>0</position>
+		<desc>招股日期</desc>
+	</leaf>
+	<leaf>
+		<name>name</name>
+		<position>1</position>
+		<desc>招股日期</desc>
+	</leaf>
+	<leaf>
+		<name>sn</name>
+		<position>2</position>
+		<desc>招股日期</desc>
+	</leaf>
+	<leaf>
+		<name>url</name>
+		<position>3</position>
+		<desc>招股日期</desc>
+	</leaf>
+</node>

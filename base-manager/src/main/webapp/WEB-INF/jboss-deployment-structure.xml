@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <deployment>
+        <!-- Exclusions allow you to prevent the server from automatically adding some dependencies     -->
+        <exclusions>
+            <module name="org.slf4j" />
+            <module name="org.slf4j.impl" />
+<!-- 如果项目中用到jcl－over－slf4j，可以将下面这个module也毙了 -->
+            <module name="org.slf4j.jcl-over-slf4j" />
+            <module name="org.apache.log4j"/>      
+            <module name="org.apache.commons.logging"/>      
+            <module name="org.log4j"/>        
+            <module name="org.jboss.logging"/>   
+        </exclusions>
+    </deployment>
+</jboss-deployment-structure>

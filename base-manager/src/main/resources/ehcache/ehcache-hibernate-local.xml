@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false">
+	
+		<!-- name:缓存名称。 -->
+	<!-- maxElementsInMemory：缓存最大个数。 -->
+	<!-- eternal:对象是否永久有效，一但设置了，timeout将不起作用。 -->
+	<!-- timeToIdleSeconds：设置对象在失效前的允许闲置时间（单位：秒）。仅当eternal=false对象不是永久有效时使用，可选属性，默认值是0，也就是可闲置时间无穷大。 -->
+	<!-- timeToLiveSeconds：设置对象在失效前允许存活时间（单位：秒）。最大时间介于创建时间和失效时间之间。仅当eternal=false对象不是永久有效时使用，默认是0.，也就是对象存活时间无穷大。 -->
+	<!-- overflowToDisk：当内存中对象数量达到maxElementsInMemory时，Ehcache将会对象写到磁盘中。 -->
+	<!-- diskSpoolBufferSizeMB：这个参数设置DiskStore（磁盘缓存）的缓存区大小。默认是30MB。每个Cache都应该有自己的一个缓冲区。 -->
+	<!-- maxElementsOnDisk：硬盘最大缓存个数。 -->
+	<!-- diskPersistent：是否缓存虚拟机重启期数据 Whether the disk store persists between  restarts of the Virtual Machine. The default value is false. -->
+	<!-- diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认是120秒。 -->
+	<!-- memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）。 -->
+	<!-- clearOnFlush：内存数量最大时是否清除。 -->
+
+	<!-- 	<diskStore path="java.io.tmpdir/hibernate" /> -->
+	<!--指定二级缓存存放在磁盘上的位置 -->
+	<diskStore path="user.dir/ehcache/hibernate" />
+	
+	<!-- DefaultCache setting. -->
+	<!--我们可以给每个实体类指定一个对应的缓存，如果没有匹配到该类，则使用这个默认的缓存配置 一个小时 -->
+	<defaultCache maxElementsInMemory="1000" eternal="false"
+		timeToIdleSeconds="36000" 
+		timeToLiveSeconds="36000" 
+		overflowToDisk="false"
+		diskExpiryThreadIntervalSeconds="1200"
+		memoryStoreEvictionPolicy="FIFO">
+	</defaultCache>
+	<cache name="org.hibernate.cache.internal.StandardQueryCache" maxElementsInMemory="5000" eternal="true" overflowToDisk="false" />
+	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache" maxElementsInMemory="5000" eternal="true" overflowToDisk="false" />
+		<!--可以给每个实体类指定一个配置文件，通过name属性指定，要使用类的全名 或者自定义一个 然后类里面用 region 属性指定 -->
+<!--  	<cache maxElementsInMemory="10000"  eternal="false"  name="com.infosky.sys.entity.po.City"  -->
+<!--  		overflowToDisk="true"  -->
+<!--  		timeToLiveSeconds="864000" />  --><!--  10天 3600*24*10  -->
+ 	<cache maxElementsInMemory="10000"  eternal="false"  name="regionCache1"  
+ 		overflowToDisk="true" 
+ 		timeToLiveSeconds="2592000"  /> <!--  一个月 3600*24*30  -->
+	<cache name="org.hibernate.cache.StandardQueryCache"
+		maxElementsInMemory="10000" timeToIdleSeconds="3000">
+	</cache>
+    <!--页面缓存 -->
+    <cache name="simplePageCache" 
+        maxElementsInMemory="10000"  eternal="false"
+        overflowToDisk="false"  timeToIdleSeconds="10" 
+        timeToLiveSeconds="10" memoryStoreEvictionPolicy="LFU" />
+</ehcache>

@@ -1,0 +1,50 @@
+tomcat7里面的content.xml需要加上以下代码
+<!-- 支持comet框架 -->
+<Loader delegate="true" />
+一、背景
+       在做某类程序应用时，需要将服务器的响应自动的反馈给浏览器，而不是采用用户请求的方式。基于这样的应用还是比较多的，比如说网页聊天、实时消息提醒等等。
+       所以我们需要这样一种技术来实现服务器主动的将信息推送到浏览器
+二、解决方案思考
+
+       1、定时请求。定义一个timer，浏览器每隔一段时间去请求服务器，然后配合ajax将结果显示到客户浏览器上。
+
+             这种方式的缺点在于，第一效率低，对服务器的压力比较大；第二在于timer的时间不好确定。基于这两种考虑，该方式不宜采用
+
+       2、基于HTTP长连接方式，将服务器响应的消息主动的推送到客户浏览器，然后配合ajax将结果显示到客户浏览器上
+
+           这种方式基本上解决了方案一的两个缺点，这种方式的关键在于维护一个HTTP的长连接对象列表
+三、Comet的探索
+
+       1、基于方案二的考虑，在Tomcat6以后版本推出了Comet的实现，下面我们就针对Tomcat6.0.29版本来实现这种服务器推的方式
+
+       2、Comet的定义
+
+-----------------------------------------------------摘自百度百科----------------------------------------------------------
+comet 【计】：基于 HTTP 长连接的“服务器推”技术，是一种新的 Web 应用架构。基于这种架构开发的应用中，服务器端会主动以异步的方式向客户端程序推送数据，而不需要客户端显式的发出请求。
+Comet 架构非常适合事件驱动的 Web 应用，以及对交互性和实时性要求很强的应用，如股票交易行情分析、聊天室和 Web 版在线游戏等。
+服务器推送技术(Server Push)是最近Web技术中最热门的一个流行术语，它的别名叫Comet(彗星)。它是继AJAX之后又一个倍受追捧的Web技术。服务器推送技术最近的流行与AJAX有着密切的关系。
+随着Web技术的流行，越来越多的应用从原有的C/S模式转变为B/S模式，享受着Web技术所带来的各种优势(例如跨平台、免客户端维护、跨越防火墙、扩展性好等)。但是基于浏览器的应用，也有它不足的地方。
+主要在于界面的友好性和交互性。由于浏览器中的页面每次需要全部刷新才能从服务器端获得最新的数据或向服务器传送数据，这样产生的延迟所带来的视觉感受非常糟糕。
+因此很多的桌面应用为了获得更友好的界面放弃了Web技术，或者采用浏览器的插件技术(ActiveX、Applet、Flash等)。但是浏览器插件技术本身又有许多问题，例如跨平台问题和插件版本兼容性问题。
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+       3、实现方式。目前对于Comet的实现方式有三种，基于长轮询(long polling)、基于iframe“、基于流(stream)三种实现comet的方式。这里我们将采用iframe的方式来编写一个web版的聊天室来测试Comet的效果
+四、实施步骤
+    1、要使用Tomcat的Comet技术必须利用Tomcat的 Advanced I/O 模块，这样就需要在tomcat的配置文件server.xml中进行配置protocol，如下:
+<Connector connectionTimeout="20000" port="8089" protocol="org.apache.coyote.http11.Http11NioProtocol" redirectPort="8443"/>
+
+    2、测试，分别打开两个浏览器页面，分别访问http://localhost:8089/base-manager/static/comnet/index.jsp?name=jack
+ 和http://localhost:8089/base-manager/static/comnet/index.jsp?name=lily
+
+然后分别发送消息进行聊天进行测试
+五、总结
+
+   1、该方案中的例子还有一些BUG，但是基本上实现了功能，可以根据需求进行修改
+
+   2、Comet服务器推技术大大提高了像网页聊天室这样的应用的用户体验，有类似需求的项目可以考虑采用此技术
+
+   3、对于Comet的HTTP长连接的优缺点还有待探索研究，希望知者不吝赐教
+
+   4、如果加入catalina.jar导致错误org.apache.jasper.JasperException: Java.lang.ClassCastException:org.apache.catalina.util.DefaultAnnotationProcessor cannot be cast to org.apache.AnnotationProcessor ，
+则在Tomcat的安装目录下的conf目录中找到contex.xml文件，在Context节点内的最前端加入<Loader delegate="true" />

@@ -4,3 +4,4 @@ CREATE DATABASE xtkj DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 表启动工程的时候通过hibernage自动创建
 执行sql文件init.sql
 测试
+修改

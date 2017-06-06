@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+	<size>3</size>
+	<dataType>com.infosky.demo.entity.dto.DemoDTO</dataType>
+	<leaf>
+		<name>id</name>
+		<position>0</position>
+		<convert>com.infosky.common.excel.Double2Integer</convert>
+		<desc>示例编号</desc>
+	</leaf>
+	<leaf>
+		<name>name</name>
+		<position>1</position>
+		<desc>示例名称</desc>
+	</leaf>
+	<leaf>
+		<name>age</name>
+		<position>2</position>
+		<convert>com.infosky.common.excel.Double2Integer</convert>
+		<desc>示例时长</desc>
+	</leaf>
+</node>

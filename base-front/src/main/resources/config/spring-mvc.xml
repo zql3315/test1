@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- 启用spring mvc 注解 -->
+	<context:annotation-config />
+
+	<mvc:annotation-driven validator="validator" conversion-service="conversionService">
+		<!-- 异步支持 默认30秒超时 -->
+		<mvc:async-support default-timeout="30000" task-executor="executor" />
+		<mvc:message-converters register-defaults="true">
+			<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg ref="utf8Charset" />
+			</bean>
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+			<!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="prettyPrint" value="true" />
+				<property name="objectMapper">
+					<bean class="com.infosky.common.mapper.JsonMapper"></bean>
+				</property>
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<bean id="utf8Charset" class="java.nio.charset.Charset" factory-method="forName">
+		<constructor-arg value="UTF-8" />
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 需拦截的地址 -->
+			<mvc:mapping path="/*" />
+			<!-- 需排除拦截的地址 -->
+			<mvc:exclude-mapping path="/static/*" />
+			<bean class="com.infosky.interceptor.CommonInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 定义JSP文件的位置 -->
+	<bean id="viewResolverJsp" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+	</bean>
+
+	<!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL -->
+	<!-- <mvc:default-servlet-handler/> -->
+	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/assets/**" location="/assets/" />
+	<mvc:resources mapping="/upload/**" location="/upload/" />
+
+	<!-- 支持自定义返回json内容，写法如：ModelAndView("jsonView") 但是一般都用spring自带的@ResponseBody注解取代了 -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+
+	<!-- 采用SpringMVC的验证注解 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+		<!--不设置则默认为classpath下的 ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="validatemessageSource" />
+	</bean>
+	<bean id="validatemessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:validatemessages" />
+		<property name="fileEncodings" value="utf-8" />
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+	<!-- 支持提交满足下面格式的date类型的字段对象，也可以通过在control层用@InitBinder注解注册的方式实现 -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="com.infosky.framework.entity.utils.CustomDateConverter">
+					<property name="parsePatterns">
+						<list>
+							<value>yyyy-MM-dd</value>
+							<value>yyyy-MM-dd HH:mm:ss</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 定义无需Controller的url<->view直接映射 -->
+	<mvc:view-controller path="/" view-name="index" />
+
+	<!-- 文件上传相关 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--one of the properties available;the maximum upload size in bytes 100M -->
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="10240" />
+	</bean>
+
+	<!-- 总错误处理 -->
+	<!-- 该异常是SpringMVC在检查信息时抛出来的，而且此时还没有进入到Controller方法中 -->
+	<bean id="exceptionHandler" class="com.infosky.framework.exception.MyExceptionHandler" />
+	<!-- <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">common/error</prop>
+				<prop key="java.lang.Throwable">common/err</prop>
+			</props>
+		</property>
+		<property name="statusCodes">
+			<props>
+				<prop key="common/error">500</prop>
+				<prop key="common/404">404</prop>
+			</props>
+		</property>
+		设置日志输出级别，不定义则默认不输出警告等错误日志信息
+		<property name="warnLogCategory" value="WARN"></property>
+		默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置
+		<property name="defaultErrorView" value="common/error"></property>
+		默认HTTP状态码
+		<property name="defaultStatusCode" value="500"></property>
+	</bean> -->
+
+	<!-- 智能表单配置引入 -->
+	<!-- AOP核心功能 -->
+	<import resource="classpath*:spring/spring-mvc-aop.xml" />
+	<import resource="classpath*:spring/spring-mvc-shiro-aop.xml" />
+	<!-- 框架核心功能 -->
+	<import resource="classpath*:spring/framework-spring-mvc.xml" />
+	<!-- 系统功能 -->
+	<import resource="classpath*:spring/sys-spring-mvc.xml" />
+	<!-- 日志功能 -->
+	<import resource="classpath*:spring/log-spring-mvc.xml" />
+	<!-- 通知功能 -->
+	<import resource="classpath*:spring/notify-spring-mvc.xml" />
+	<!-- 图表功能 -->
+	<import resource="classpath*:spring/report-spring-mvc.xml" />
+	<!-- 任务功能 -->
+	<import resource="classpath*:spring/task-spring-mvc.xml" />
+	<!-- 微信功能 -->
+	<import resource="classpath*:spring/weixin-spring-mvc.xml" />
+	<!-- freemarker功能 -->
+	<import resource="classpath*:spring/freemarker-spring-mvc.xml" />
+	<!-- 自动构建功能 -->
+	<import resource="classpath*:spring/build-spring-mvc.xml" />
+	<!-- CMS功能 -->
+	<import resource="classpath*:spring/cms-spring-mvc.xml" />
+	<!-- Demo功能 -->
+	<import resource="classpath*:spring/demo-spring-mvc.xml" />
+</beans>

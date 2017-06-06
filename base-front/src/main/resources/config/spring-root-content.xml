@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- 启用spring mvc 注解 -->
+	<!-- 它的作用是隐式地向 Spring 容器注册 AutowiredAnnotationBeanPostProcessor、CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor、RequiredAnnotationBeanPostProcessor 
+		这4个BeanPostProcessor。其作用是如果你想在程序中使用注解，就必须先注册该注解对应的类 -->
+	<context:annotation-config />
+	<!-- 引入属性文件 -->
+	<context:property-placeholder location="classpath:resources.properties" />
+	<bean class="com.infosky.framework.web.WebUtil" lazy-init="false" />
+
+	<!-- 智能表单配置引入 -->
+	<!-- 框架核心功能 -->
+	<import resource="classpath*:spring/framework-spring-mvc-hibernate.xml" />
+	<!-- 系统功能 -->
+	<import resource="classpath*:spring/sys-spring-mvc-hibernate.xml" />
+	<!-- 日志功能 -->
+	<import resource="classpath*:spring/log-spring-mvc-hibernate.xml" />
+	<!-- 通知功能 -->
+	<import resource="classpath*:spring/notify-spring-mvc-hibernate.xml" />
+	<!-- 图表功能 -->
+	<import resource="classpath*:spring/report-spring-mvc-hibernate.xml" />
+	<!-- 任务功能 -->
+	<import resource="classpath*:spring/task-spring-mvc-hibernate.xml" />
+	<!-- 微信功能 -->
+	<import resource="classpath*:spring/weixin-spring-mvc-hibernate.xml" />
+	<!-- freemarker功能 -->
+	<import resource="classpath*:spring/freemarker-spring-mvc-hibernate.xml" />
+	<!-- 自动构建功能 -->
+	<import resource="classpath*:spring/build-spring-mvc-hibernate.xml" />
+	<!-- CMS功能 -->
+	<import resource="classpath*:spring/cms-spring-mvc-hibernate.xml" />
+	<!-- Demo功能 -->
+	<import resource="classpath*:spring/demo-spring-mvc-hibernate.xml" />
+	<!-- redis功能 -->
+	<import resource="classpath*:redis/*.xml" />
+</beans>

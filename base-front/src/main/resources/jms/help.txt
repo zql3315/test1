@@ -1,0 +1,54 @@
+1、JMS简介：JMS即Java Message Service，是Java 程序创建、发送、接收和读取企业消息传送系统的消息提供了一种常用的方式。
+2、准备工作：根据你的需求到apache官网下载ActiveMQ的安装包http://activemq.apache.org/download-archives.html
+3、解压下载的zip包，运行bin下的activemq.bat文件，启动MQ服务。
+4、在浏览器中输入：http://localhost:8161/查看是否已成功启动MQ服务，
+      在启动后程序有两个端口会被MQ占用：8161和61616，8161被ActiveMQ自带的web应用程序占用改应用程序可以用来管理消息，61616而用来等待JMS client的连接。
+5、activemq安全设置 设置admin的用户名和密码 
+
+
+
+ActiveMQ使用的是jetty服务器, 打开conf/jetty.xml文件，找到
+
+
+<bean id="securityConstraint" class="org.eclipse.jetty.http.security.Constraint">
+        <property name="name" value="BASIC" />
+        <property name="roles" value="admin" />
+        <property name="authenticate" value="false" />
+</bean>
+
+
+
+将property name为authenticate的属性value="false" 改为"true"，
+控制台的登录用户名密码保存在conf/jetty-realm.properties文件中,内容如下:
+
+
+## ---------------------------------------------------------------------------
+## Licensed to the Apache Software Foundation (ASF) under one or more
+## contributor license agreements.  See the NOTICE file distributed with
+## this work for additional information regarding copyright ownership.
+## The ASF licenses this file to You under the Apache License, Version 2.0
+## (the "License"); you may not use this file except in compliance with
+## the License.  You may obtain a copy of the License at
+## 
+## http://www.apache.org/licenses/LICENSE-2.0
+## 
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+## ---------------------------------------------------------------------------
+
+
+# Defines users that can access the web (console, demo, etc.)
+# username: password [,rolename ...]
+admin: admin, admin
+
+
+值得注意的是 用户名和密码的格式是
+
+用户名 : 密码 ,角色名
+
+
+windows 参考文档：http://yuxisanren.iteye.com/blog/1912587
+linux 参考文档：http://wuzhaohuixy-qq-com.iteye.com/blog/2174889

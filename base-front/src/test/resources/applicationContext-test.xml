@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+    <!-- 启用spring mvc 注解 -->
+    <context:annotation-config />
+    <!-- 引入属性文件 -->
+    <context:property-placeholder location="classpath:resources.properties" />
+    <!-- <mvc:annotation-driven />  会自动注册  一下8个bean到工厂中
+        RequestMappingHandlerMapping    BeanNameUrlHandlerMapping
+        RequestMappingHandlerAdapter    HttpRequestHandlerAdapter
+        SimpleControllerHandlerAdapter    ExceptionHandlerExceptionResolver
+        ResponseStatusExceptionResolver    DefaultHandlerExceptionResolver 
+    -->
+    <!-- <mvc:annotation-driven /> -->
+    <!-- Spring3.1开始的注解 HandlerMapping -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <!-- <property name="interceptors"> -->
+        <!-- <list> -->
+        <!-- <bean class="com.infosky.ht.interceptor.UserInterceptor"></bean> -->
+        <!-- </list> -->
+        <!-- </property> -->
+    </bean>
+
+    <!-- 定义JSP文件的位置 -->
+    <bean id="viewResolverJsp" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="1" />
+    </bean>
+
+    <!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL -->
+    <!-- <mvc:default-servlet-handler/> -->
+    <mvc:resources mapping="/static/**" location="/static/" />
+    <mvc:resources mapping="/assets/**" location="/assets/" />
+    <mvc:resources mapping="/upload/**" location="/upload/" />
+
+    <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+    <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+        <property name="objectMapper">  
+            <bean class="com.infosky.common.mapper.JsonMapper"></bean>  
+        </property> 
+    </bean>
+    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <constructor-arg value="UTF-8" />
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+     <!-- 重写StringHttpMessageConverter方法把它原来默认是字符编码从iso转换到utf-8 但是和jackson放一起没生效，但是如果是一个可以对get请求失效 -->
+    <bean id="utf8StringHttpMessageConverter" class="com.infosky.framework.spring.UTF8StringHttpMessageConverter" />
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+    <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+    <!-- Spring3.1开始的注解 HandlerAdapter 采用SpringMVC自带的JSON转换工具，支持@ResponseBody注解 -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <!--   把ByteArray加在Json前面  要不然调用ResponseEntity<byte[]> 下载的时候会出现无效的下载结果  -->
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>  
+                <ref bean="utf8StringHttpMessageConverter" />
+                <ref bean="mappingJackson2HttpMessageConverter" />
+            </list>
+        </property>
+        <property name="webBindingInitializer">
+            <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+                <property name="validator" ref="validator"></property>
+            </bean>
+        </property>
+    </bean>
+    <!-- 采用SpringMVC的验证注解 -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+    </bean>
+
+    <!-- 定义无需Controller的url<->view直接映射 -->
+    <mvc:view-controller path="/" view-name="index" />
+
+    <!-- 文件上传相关 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--one of the properties available;the maximum upload size in bytes 100M -->
+        <property name="maxUploadSize" value="104857600" />
+    </bean>
+
+
+    <!-- 总错误处理 -->
+    <!-- 该异常是SpringMVC在检查信息时抛出来的，而且此时还没有进入到Controller方法中 -->
+<!--     <bean id="exceptionHandler" class="com.infosky.framework.exception.MyExceptionHandler"/> -->
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+         <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">common/error</prop>
+                <prop key="java.lang.Throwable">common/err</prop>
+            </props>
+        </property>
+        <property name="statusCodes">
+            <props>
+                <prop key="common/error">500</prop>
+                <prop key="common/404">404</prop>
+            </props>
+        </property>
+        <!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->
+        <property name="warnLogCategory" value="WARN"></property>
+        <!-- 默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置 -->
+        <property name="defaultErrorView" value="common/error"></property>
+        <!-- 默认HTTP状态码 -->
+        <property name="defaultStatusCode" value="500"></property>
+    </bean>
+
+    <!-- 将Controller抛出的异常转到特定View, 保持SiteMesh的装饰效果 <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> <property name="exceptionMappings"> <props> <prop key="java.lang.Throwable">error/500</prop> 
+        </props> </property> </bean> -->
+    <bean class="com.infosky.framework.web.WebUtil" lazy-init="false" />
+
+    <!-- 智能表单配置引入 -->
+    <import resource="classpath*:redis/*.xml" />
+</beans>

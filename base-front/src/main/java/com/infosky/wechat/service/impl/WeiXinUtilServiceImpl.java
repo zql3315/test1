@@ -36,7 +36,6 @@ import com.infosky.wechat.entity.po.WeixinUniFiedOrder;
 @Service
 public class WeiXinUtilServiceImpl {
 
-    @Autowired
     protected final static Logger logger = LoggerFactory.getLogger(WeiXinUtilServiceImpl.class);
 
     @Autowired

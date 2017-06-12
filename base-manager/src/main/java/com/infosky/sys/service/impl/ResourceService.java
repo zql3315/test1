@@ -67,21 +67,6 @@ public class ResourceService extends JpaService<Resource, ResourceDTO, PageResul
     protected ExcelResolver<ResourceDTO, PageResult<ResourceDTO>, String> resolver;
 
     @Autowired
-    protected TaskDAO taskDAO;
-
-    @Value("${export.folder}")
-    private String folder;
-
-    @Value("${export.file}")
-    private String file;
-
-    @Autowired
-    private NotificationDAO notificationDAO;
-
-    @Autowired
-    private PushService<String> pushService;
-
-    @Autowired
     private PermissionService permissionService;
 
     /**
@@ -187,84 +172,6 @@ public class ResourceService extends JpaService<Resource, ResourceDTO, PageResul
     @Override
     protected DAO<Resource, String> getDAO() {
         return dao;
-    }
-
-    //@Scheduled(cron = "0/5 * * * * *")
-    public void ScheduledExport() throws JAXBException {
-        Searchable s = new SearchRequest();
-
-        s.addSearchParam("type", Operator.EQ, "1");
-        s.addSearchParam("status", Operator.EQ, "1");
-
-        Specification<Task> spec = DynamicSearchUtils.toSpecification(s);
-
-        //查询导出任务
-        List<Task> tasks = taskDAO.findAll(spec);
-
-        if (tasks.isEmpty()) {
-            return;
-        }
-
-        OutputStream os = null;
-
-        JAXBContext jaxbContext = JAXBContext.newInstance(SearchRequest.class);
-        Unmarshaller jaxbUnMarshaller = jaxbContext.createUnmarshaller();
-        String ymd = DateUtils.date2Str(new Date(), "yyyyMMdd");
-        File xlsDir = new File(folder + File.separator + ymd);
-        //判断目录是否存在
-        if (!xlsDir.exists()) {
-            xlsDir.mkdirs();
-        }
-
-        String ymdhms = DateUtils.date2Str(new Date(), "yyyyMMddHHmmss");
-
-        for (Task task : tasks) {
-            //更新任务为 执行中
-            task.setStatus("2");
-            taskDAO.save(task);
-
-            try {
-                SearchRequest sr = (SearchRequest) jaxbUnMarshaller.unmarshal(new StringReader(task.getRequestbody()));
-
-                os = new FileOutputStream(new File(folder + File.separator + ymd + File.separator + ymdhms + file));
-                String templateName = "template/resource.xml";
-                resolver.doWrite2FS(os, this, sr, null, templateName);
-
-                //更新任务为 成功
-                task.setStatus("3");
-                taskDAO.save(task);
-
-                //添加通知
-                Notification notify = new Notification();
-
-                notify.setSystem("Excel");
-                notify.setTitle("Excel 导出");
-                notify.setTargetId(task.getCreator());
-                notify.setIsRead("non-read");
-                notify.setDate(new Date());
-                notify.setAttachment(folder + File.separator + ymd + File.separator + ymdhms + file);
-
-                notificationDAO.save(notify);
-
-                Searchable ss = new SearchRequest();
-                ss.addSearchParam("isRead", Operator.EQ, "non-read");
-
-                Specification<Notification> specification = DynamicSearchUtils.toSpecification(ss);
-
-                List<Notification> notifies = notificationDAO.findAll(specification);
-
-                Map<String, Object> data = Maps.newHashMap();
-                data.put("notifications", notifies);
-                data.put("count", notifies.size());
-
-                pushService.push("admin", data);
-            } catch (Exception e) {
-                e.printStackTrace();
-                //更新任务为 失败
-                task.setStatus("4");
-                taskDAO.save(task);
-            }
-        }
     }
 
     public Collection<ResourceDTO> findParentResource() {

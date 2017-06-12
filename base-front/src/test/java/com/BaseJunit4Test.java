@@ -54,7 +54,6 @@ import com.infosky.demo.service.impl.ChildService;
 import com.infosky.demo.service.impl.DemoService;
 import com.infosky.demo.service.impl.DepartmentService;
 import com.infosky.framework.web.WebUtil;
-import com.infosky.sys.service.impl.UserService;
 import com.infosky.sys.web.LoginController;
 import com.infosky.wechat.entity.dto.WeiXinKeywordMaterialDTO;
 import com.infosky.wechat.service.impl.WeiXinKeywordMaterialService;
@@ -180,13 +179,6 @@ public class BaseJunit4Test {
         service.testSpecifications();
     }
 
-    @Test
-    public void test4() {
-        UserService service = (UserService) WebUtil.getContext().getBean("userService");
-        Searchable searchable = new SearchRequest();
-        searchable.addSearchParam("id", Operator.EQ, "8a94d1b750b80d810150b812a8ff0006");
-        System.out.println(service.findAll(searchable) + "----22------");
-    }
 
     @Test
     public void test5() {

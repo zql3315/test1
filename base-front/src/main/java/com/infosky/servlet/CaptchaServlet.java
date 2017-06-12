@@ -19,9 +19,7 @@ import com.infosky.common.util.CaptchaUtil;
  * @author n004881
  * 
  */
-@WebServlet(name = "CaptchaServlet", urlPatterns = {
-    "/servlet/captchaCode"
-}, loadOnStartup = 1, asyncSupported = true)
+@WebServlet(name = "CaptchaServlet", urlPatterns = { "/servlet/captchaCode"}, loadOnStartup = 1, asyncSupported = true)
 public class CaptchaServlet extends HttpServlet {
 
     private static final long serialVersionUID = -124247581620199710L;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
@@ -103,51 +103,17 @@
 	<!-- 总错误处理 -->
 	<!-- 该异常是SpringMVC在检查信息时抛出来的，而且此时还没有进入到Controller方法中 -->
 	<bean id="exceptionHandler" class="com.infosky.framework.exception.MyExceptionHandler" />
-	<!-- <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="java.lang.Exception">common/error</prop>
-				<prop key="java.lang.Throwable">common/err</prop>
-			</props>
-		</property>
-		<property name="statusCodes">
-			<props>
-				<prop key="common/error">500</prop>
-				<prop key="common/404">404</prop>
-			</props>
-		</property>
-		设置日志输出级别，不定义则默认不输出警告等错误日志信息
-		<property name="warnLogCategory" value="WARN"></property>
-		默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置
-		<property name="defaultErrorView" value="common/error"></property>
-		默认HTTP状态码
-		<property name="defaultStatusCode" value="500"></property>
-	</bean> -->
 
 	<!-- 智能表单配置引入 -->
 	<!-- AOP核心功能 -->
-	<import resource="classpath*:spring/spring-mvc-aop.xml" />
+	<!-- <import resource="classpath*:spring/spring-mvc-aop.xml" /> -->
 	<import resource="classpath*:spring/spring-mvc-shiro-aop.xml" />
 	<!-- 框架核心功能 -->
 	<import resource="classpath*:spring/framework-spring-mvc.xml" />
 	<!-- 系统功能 -->
 	<import resource="classpath*:spring/sys-spring-mvc.xml" />
-	<!-- 日志功能 -->
-	<import resource="classpath*:spring/log-spring-mvc.xml" />
-	<!-- 通知功能 -->
-	<import resource="classpath*:spring/notify-spring-mvc.xml" />
-	<!-- 图表功能 -->
-	<import resource="classpath*:spring/report-spring-mvc.xml" />
-	<!-- 任务功能 -->
-	<import resource="classpath*:spring/task-spring-mvc.xml" />
 	<!-- 微信功能 -->
 	<import resource="classpath*:spring/weixin-spring-mvc.xml" />
-	<!-- freemarker功能 -->
-	<import resource="classpath*:spring/freemarker-spring-mvc.xml" />
-	<!-- 自动构建功能 -->
-	<import resource="classpath*:spring/build-spring-mvc.xml" />
-	<!-- CMS功能 -->
-	<import resource="classpath*:spring/cms-spring-mvc.xml" />
 	<!-- Demo功能 -->
 	<import resource="classpath*:spring/demo-spring-mvc.xml" />
 </beans>

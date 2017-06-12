@@ -8,7 +8,7 @@
     </parent>
     <artifactId>newmedia</artifactId>
     <packaging>war</packaging>
-    <name>base-manager</name>
+    <name>base-front</name>
     <dependencies>
         <!-- tomcat相关jar 依赖 -->
         <dependency>
@@ -404,7 +404,7 @@
 
     </dependencies>
     <build>
-        <finalName>base-manager</finalName>
+        <finalName>base-front</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>

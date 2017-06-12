@@ -115,10 +115,6 @@
 		<property name="rememberMeParam" value="rememberMe" />
 	</bean>
 
-	<!-- 重写shiro权限拦截器 实现自定义流程 以达到对所有URL的拦截 -->
-	<bean id="userPermissionAuthorizationFilter" class="com.infosky.sys.service.security.UserPermissionAuthorizationFilter">
-	</bean>
-
 	<!-- 显试的重写shiro的ssl拦截器 自定义端口 -->
 	<bean id="sslFilter" class="org.apache.shiro.web.filter.authz.SslFilter">
 		<property name="port" value="8443" />
@@ -146,7 +142,6 @@
 		<property name="filters">
 			<util:map>
 				<entry key="authc" value-ref="formAuthenticationFilter" />
-				<entry key="perms" value-ref="userPermissionAuthorizationFilter" />
 				<entry key="ssl" value-ref="sslFilter" />
 				<entry key="kickout" value-ref="kickoutSessionControlFilter" />
 			</util:map>
@@ -158,27 +153,7 @@
 		<!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter -->
 		<property name="filterChainDefinitions">
 			<value>
-				/static/** = anon
-				/webservice/** = anon
-				/assets/** = anon
-				/css/** =anon
-				/js/** =anon
-				/logout = anon
-				/upload/** = anon
-				/demo/**=anon
-				/wechatServlet=anon
-				/servlet/**=anon
-				/freemarker/**=anon
-				/unauthorized=anon
-				/druid/**=anon
-				/login** = authc
-				<!-- /login** = authc ,ssl -->
-				<!-- /login/** = authc ,ssl -->
-				/noaccess/** = authc,kickout
-				/user/** = authc,kickout,perms
-				/role/** = authc,kickout,perms
-				/resource/** = authc,kickout,perms
-				/** = kickout,user,perms
+				/user/** = authc,kickout
 			</value>
 		</property>
 	</bean>

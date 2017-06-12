@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
@@ -17,7 +17,7 @@
 	<jaxws:server serviceClass="com.infosky.webservice.IUser" address="/iuser"></jaxws:server>
 
 	<!-- 注意：implementor为接口的具体实现类 实际项目不要用这种方式 -->
-	<jaxws:endpoint id="user" implementor="com.infosky.webservice.impl.UserImpl" address="/user" />
+	<!-- <jaxws:endpoint id="user" implementor="com.infosky.webservice.impl.UserImpl" address="/user" /> -->
 
 	<!-- 客户端调用 -->
 	<!-- demo http://www.cnblogs.com/xiaochangwei/p/5400303.html -->

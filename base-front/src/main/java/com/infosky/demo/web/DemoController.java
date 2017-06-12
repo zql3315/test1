@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -39,8 +38,6 @@ import com.infosky.framework.web.CrudController;
 import com.infosky.framework.web.PageResult;
 import com.infosky.redis.service.RedisUtilsService;
 import com.infosky.sys.service.impl.ExcelResolver;
-import com.infosky.sys.service.impl.OperationService;
-import com.infosky.sys.service.impl.ResourceService;
 
 /**
  * demo演示
@@ -53,12 +50,6 @@ import com.infosky.sys.service.impl.ResourceService;
 public class DemoController extends CrudController<String, PageResult<DemoDTO>, DemoDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoController.class);
-
-    @Autowired
-    private ResourceService service;
-
-    @Autowired
-    private OperationService operationService;
 
     @Autowired
     private DemoService demoService;
@@ -74,6 +65,13 @@ public class DemoController extends CrudController<String, PageResult<DemoDTO>, 
 
     @Autowired
     public AsyncService asyncService;
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String test() {
+        logger.debug("demo");
+        return "demo";
+    }
 
     @RequestMapping(value = "test1", produces = "text/plain;charset=UTF-8")
     @ResponseBody
@@ -155,9 +153,9 @@ public class DemoController extends CrudController<String, PageResult<DemoDTO>, 
         return "我们991";
     }
 
-    @RequestMapping(value = "test")
+    @RequestMapping(value = "testMap")
     @ResponseBody
-    public Map<String, String> test() {
+    public Map<String, String> testMap() {
         // EhcacheUtil.put("test", "a", "1111");
         System.out.println(EhcacheUtil.get("test", "a"));
         Map<String, String> map = new HashMap<String, String>();
@@ -178,21 +176,6 @@ public class DemoController extends CrudController<String, PageResult<DemoDTO>, 
     public String pageCache() {
         System.out.println("123123");
         return "123123123";
-    }
-
-    @RequestMapping(value = "ztree")
-    @ResponseBody
-    public List<Map<String, Object>> ztree() {
-        return service.buildTree(null);
-    }
-
-    @RequestMapping(value = "/ztreePreview")
-    public String getView(Model model) {
-        logger.info("日志测试");
-
-        model.addAttribute("operations", operationService.findAll(null));
-
-        return "/demo/ztree";
     }
 
     @RequestMapping(value = "/preview2")

@@ -73,15 +73,17 @@
 					data : function(d) {
 					   var s = {};
                        var as = [];
-					   if(order.column > 0 ){
-                            $.each(d.columns, function(i, column) {
-                                if(i == order.column ){
-                                     s.fileName = column.data;
-                                     s.sort = order.dir;
-                                     as.push(s);
-                                }
-                            });
-                        }
+					   $.each(d.order, function(i, order) {
+							if(order.column > 0 ){
+								$.each(d.columns, function(i, column) {
+									if(i == order.column ){
+										 s.fileName = column.data;
+										 s.sort = order.dir;
+										 as.push(s);
+									}
+		                        });
+							}
+                        });
                         if(as.length > 0){
 							d["sort"] = JSON.stringify(as);
 						}
@@ -127,7 +129,6 @@
 				//取出当前页面导航添加链接
 				var lastItem=breadcrumb_items[breadcrumb_items.length-1];
 				lastItem['data-action']="${r"${ctx}"}/${table.sn}/preview";
-				console.log(lastItem);
 				breadcrumb_items[breadcrumb_items.length-1]=lastItem;
 				
 				breadcrumb_items.push({'text': $(this).text(), 'data-action': '${r"${ctx}"}/${table.sn}/toAdd'});

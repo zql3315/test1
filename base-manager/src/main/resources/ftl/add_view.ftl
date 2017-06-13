@@ -14,33 +14,33 @@
 				<i class="ace-icon fa fa-pencil-square-o"></i>
 				添加
 			</h3>
-		</div>
-		<form role="form" class="form-horizontal" method="POST" id="form">
-			<div class="form-info form-info-striped">
-			
-				<#list columns as column>
-					<div class="form-info-row">
-						<div class="form-info-name"> ${column.remarks} </div>
-						<div class="form-info-value">
-							<input type="text"  placeholder="${column.remarks}" name="${column.propertyName}" value="${r"${model."}${column.propertyName}${r"}"}" class="col-xs-10 col-sm-5">
-						</div>
-					</div>
-				</#list>
+			<form role="form" class="form-horizontal" method="POST" id="form">
+				<div class="form-info form-info-striped">
 				
-			</div>
-			<div class="clearfix form-actions">
-				<div class="col-md-offset-3 col-md-9">
-					<button class="btn btn-info" type="submit">
-						<i class="ace-icon fa fa-check smaller-90"></i>提交
-					</button>
-
-					&nbsp; &nbsp; &nbsp;
-					<button class="btn" type="button" id="cancel">
-						<i class="ace-icon fa fa-undo smaller-90"></i>取消
-					</button>
+					<#list columns as column>
+						<div class="form-info-row">
+							<div class="form-info-name"> ${column.remarks} </div>
+							<div class="form-info-value">
+								<input type="text"  placeholder="${column.remarks}" name="${column.propertyName}" value="${r"${model."}${column.propertyName}${r"}"}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+					</#list>
+					
 				</div>
-			</div>		
-		</form>
+				<div class="clearfix form-actions">
+					<div class="col-md-offset-3 col-md-9">
+						<button class="btn btn-info" type="submit">
+							<i class="ace-icon fa fa-check smaller-90"></i>提交
+						</button>
+	
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn" type="button" id="cancel">
+							<i class="ace-icon fa fa-undo smaller-90"></i>取消
+						</button>
+					</div>
+				</div>		
+			</form>
+		</div>
 	</div>
 	<!-- validate -->
 	<script src="${r"${ctx}"}/static/jquery-validation/1.11.1/jquery.validate.min.js"></script>

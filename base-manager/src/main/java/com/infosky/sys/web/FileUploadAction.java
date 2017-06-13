@@ -381,8 +381,8 @@ public class FileUploadAction {
             if (!targetFile.exists()) targetFile.mkdirs();
             // 保存图片
             multipartFile.transferTo(targetFile);
-            String issy = request.getParameter("nosy");// 是否添加水印
-            if (StringUtils.isNotBlank(issy) && issy.equals("1")) {// 不添加
+            String issy = request.getParameter("sy");// 是否添加水印
+            if (StringUtils.isNotBlank(issy) && issy.equals("1")) {// 添加水印
                 String sysrc = request.getSession().getServletContext().getRealPath("static/image/sy.png");
                 ImageUtils.pressImage(sysrc, path + "/" + fileName, path + "/" + fileName, 0, 0.6f);
             }

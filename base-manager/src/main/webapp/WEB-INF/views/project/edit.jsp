@@ -196,7 +196,7 @@
 						});
 						
 						$.ajax({
-							url : '${ctx}/project/add',
+							url : '${ctx}/project/edit',
 							type : 'POST',
 							async : false,
 							dataType : 'json',

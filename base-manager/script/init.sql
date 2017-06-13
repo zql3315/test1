@@ -37,12 +37,12 @@ INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VA
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('3', '示例管理', 'fa-book', '示例管理', '3', 'demo', '1', '#', '0');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('31', 'ztree示例', 'fa-inbox', 'ztree示例', '1', 'tree', '2', '/demo/ztreePreview', '3');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('32', '示例管理', 'fa-inbox', '示例管理', '1', 'demoManager', '2', '/demo/preview', '3');
+INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('33','二维码demo','fa-camera-retro ','二维码','3','qrcode','2','/demo/qrcode/index','3');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('4', '项目管理', 'fa-file-text-o', '项目管理', '2', 'project', '1', '#', '0');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('41', '项目发布', 'fa-save', '项目发布', '1', 'publish', '2', '/project/preview', '4');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('42', '项目数据表', 'fa-save', '项目数据表', '1', 'publish', '2', '/table/preview', '4');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('5', '报表管理', 'fa-signal', '报表管理', '1', 'report', '1', '#', '0');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('51', '统计图表', 'fa-file-text-o', '统计图表', '1', 'pieChart', '1', '/report/index', '5');
-INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('52','二维码demo','fa-camera-retro ','二维码','3','qrcode','2','/demo/qrcode/index','3');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('6', '任务管理', 'fa-file-text-o', '任务管理', '2', 'taskManager', '1', '#', '0');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('61', '任务管理列表', 'fa-book', '任务管理', '1', 'taskList', '2', '/task/preview', '6');
 INSERT INTO sys_resource (id,description,icons,NAME,priority,sn,TYPE,url,pid) VALUES ('7', '访问日志', 'fa-file-text-o', '访问日志', '2', 'visitLog', '1', '#', '0');

@@ -49,6 +49,11 @@ Date.prototype.pattern = function(fmt) {
 	return fmt;
 };
 
+String.prototype.stripHTML = function() {
+    var reTag = /<(?:.|\s)*?>/g;
+    return this.replace(reTag,"");
+  }
+
 //修改系统的alert风格
 window._originalAlert = window.alert;
 window.alert = function(text,callbak) {
@@ -145,9 +150,16 @@ window.confirm = function(text, cb) {
 	}
 };
 
-function showSuccess(fun) {
-	
-	var text = "操作成功";
+function showSuccess(fun,text,confirmText,cancelText) {
+	if(!text){
+		text = "操作成功,是否留在当前页面?";
+	}
+	if(!confirmText){
+		confirmText = "确认";
+	}
+	if(!cancelText){
+		cancelText = "取消";
+	}
 	
 	//初始化html
 	var init=function(){
@@ -175,12 +187,17 @@ function showSuccess(fun) {
 			title_html: true,
 			buttons: [
 				{
-					html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; 确定",
+					html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; "+confirmText,
 					"class" : "btn btn-success btn-xs",
 					click: function() {
-						
 						$(this).dialog("close"); 
-						
+					}
+				},
+				{
+					html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; "+cancelText,
+					"class" : "btn btn-xs",
+					click: function() {
+						$( this ).dialog( "close" );
 						if(fun) {
 							fun(this);
 						}

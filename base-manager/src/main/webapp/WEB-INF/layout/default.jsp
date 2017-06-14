@@ -62,6 +62,7 @@
 	if('ontouchstart' in document.documentElement) document.write("<script src='${ctx}/static/jquery/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 	var basePath = '${ctx}/';
 	var imagePath = '${imagePath}/';
+	window.UEDITOR_HOME_URL = "${ctx }/static/bdedit/";
 </script>
 <script src="${ctx}/static/jquery/js/jquery-ui.min.js"></script>
 <script src="${ctx}/static/bootstrap/js/bootstrap.min.js"></script>

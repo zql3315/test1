@@ -5,14 +5,14 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>${table.description}</title>
+<title>添加${table.description}</title>
 </head>
 <body>
 	<div class="row">
 		<div class="col-xs-12">
 			<h3 class="header smaller lighter blue">
 				<i class="ace-icon fa fa-pencil-square-o"></i>
-				添加
+				添加${table.description}
 			</h3>
 			<form role="form" class="form-horizontal" method="POST" id="form">
 				<div class="form-info form-info-striped">
@@ -42,16 +42,13 @@
 			</form>
 		</div>
 	</div>
-	<!-- validate -->
-	<script src="${r"${ctx}"}/static/jquery-validation/1.11.1/jquery.validate.min.js"></script>
-	<script src="${r"${ctx}"}/static/jquery-validation/1.11.1/messages_bs_zh.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('.chosen-select').chosen({allow_single_deselect:true}); 
 			//resize the chosen on window resize
 			$(window).on('resize.chosen', function() {
 				//var w = $('.chosen-select').parent().width();
-				$('.chosen-select').next().css({'width':368});
+				$(".chosen-select").next().css({"width":"41.66666667%","float":"left"});
 			}).trigger('resize.chosen');
 			
 			$('#form').validate({

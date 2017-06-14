@@ -5,13 +5,13 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>编辑项目</title>
+<title>编辑${table.description}</title>
 </head>
 <body>
 	<div class="row">
 		<div class="col-xs-12">
 			<h1 class="header smaller lighter blue">
-				<i class="ace-icon fa fa-pencil-square-o"></i>编辑项目
+				<i class="ace-icon fa fa-pencil-square-o"></i>编辑${table.description}
 			</h1>
 				
 			<form role="form" class="form-horizontal" method="POST" id="${table.sn}">
@@ -41,11 +41,14 @@
 			</form>
 		</div>
 	</div>
-	<!-- validate -->
-	<script src="${r"${ctx}"}/static/jquery-validation/1.11.1/jquery.validate.min.js"></script>
-	<script src="${r"${ctx}"}/static/jquery-validation/1.11.1/messages_bs_zh.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$('.chosen-select').chosen({allow_single_deselect:true}); 
+			//resize the chosen on window resize
+			$(window).on('resize.chosen', function() {
+				//var w = $('.chosen-select').parent().width();
+				$(".chosen-select").next().css({"width":"41.66666667%","float":"left"});
+			}).trigger('resize.chosen');
 			$('#${table.sn}').validate({
 				rules:{
 					<#list columns as column>

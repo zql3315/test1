@@ -142,7 +142,7 @@
 			});
 			
 			$('#editBtn').on('click',function(){
-				var selected_id=$('table input:checkbox:checked').attr('id');
+				var selected_id=$('#table input:checkbox:checked').attr('id');
 				if(!selected_id){
 					alert("您必须选择一个来操作");
 					return;
@@ -167,7 +167,7 @@
 			});
 			
 			$('#delBtn').on('click',function(){
-				var selected_id=$('table input:checkbox:checked').attr('id');
+				var selected_id=$('#table input:checkbox:checked').attr('id');
 				if(!selected_id){
 					alert("您必须选择一个来操作");
 					return ;

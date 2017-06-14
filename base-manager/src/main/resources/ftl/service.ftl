@@ -12,6 +12,7 @@ import com.infosky.framework.web.PageResult;
 import com.infosky.framework.service.JpaService;
 
 /**
+ * ${table.description}
  * <一句话功能简述>
  * <功能详细描述>
  * 

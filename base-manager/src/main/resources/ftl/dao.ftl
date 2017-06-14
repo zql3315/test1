@@ -6,6 +6,7 @@ import ${project.rPackage}.${project.mName}.entity.po.${table.eName};
 import com.infosky.framework.dao.DAO;
 
 /**
+ * ${table.description}
  * <一句话功能简述>
  * <功能详细描述>
  * 

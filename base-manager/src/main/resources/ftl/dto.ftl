@@ -13,7 +13,7 @@ package ${project.rPackage}.${project.mName}.entity.dto;
 import com.infosky.framework.entity.dto.DTO;
 
 /**
- * 工程项目
+ * ${table.description}
  * 
  * @author  xx
  * @version  [版本号, xx年xx月xx日]

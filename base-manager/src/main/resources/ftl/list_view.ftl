@@ -71,21 +71,21 @@
 					url : '${r"${ctx}"}/${table.sn}/list',
 					type : 'POST',
 					data : function(d) {
-					   var s = {};
-                       var as = [];
-					   $.each(d.order, function(i, order) {
+					   var sort = {};
+                       var arraySort = [];
+                       $.each(d.order, function(i, order) {
 							if(order.column > 0 ){
 								$.each(d.columns, function(i, column) {
 									if(i == order.column ){
-										 s.fileName = column.data;
-										 s.sort = order.dir;
-										 as.push(s);
+										 sort.fileName = column.data;
+										 sort.sort = order.dir;
+										 arraySort.push(sort);
 									}
 		                        });
 							}
-                        });
-                        if(as.length > 0){
-							d["sort"] = JSON.stringify(as);
+                       	});
+                        if(arraySort.length > 0){
+							d["sort"] = JSON.stringify(arraySort);
 						}
 						if (formData && typeof formData == 'object') {
 							$.each(formData, function(i, item) {
@@ -160,8 +160,6 @@
 				breadcrumb_items.reverse();
 				//渲染breadcrumb
 				refreshBreadcrumb(breadcrumb_items);
-				
-				var selected_id=$('table input:checkbox:checked').attr('id');
 				
 				$('div').find('.page-content').load('${r"${ctx}"}/${table.sn}/toEdit/'+selected_id,function(){
 					 //加一个遮罩在次

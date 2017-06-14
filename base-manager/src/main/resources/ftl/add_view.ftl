@@ -83,7 +83,11 @@
 							contentType : 'application/json;charset=UTF-8',
 							data : JSON.stringify(d)
 						}).done(function(data) {
-							alert('添加成功');
+							showSuccess(function(){
+                                $('.page-content').load('${r"${ctx}"}/${table.sn}/preview/',function(){
+                                     //加一个遮罩在次
+                                });
+                            },"操作成功,您想要继续添加么？");
 						}).fail(function(data) {
 							alert('添加失败');
 						});

@@ -10,7 +10,7 @@ import com.infosky.framework.web.PageResult;
 import com.infosky.framework.service.PagingService;
 import com.infosky.framework.web.CrudController;
 /**
- * 表操作
+ * ${table.description}
  * 
  * @author  xx
  * @version  [版本号, xx年xx月xx日]

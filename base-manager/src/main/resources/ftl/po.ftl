@@ -10,6 +10,7 @@
  */
 package ${project.rPackage}.${project.mName}.entity.po;
 
+import com.infosky.framework.annotation.Comment;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,7 +19,8 @@ import com.infosky.framework.entity.po.PO;
 
 /**
  * 
- * 
+ * ${table.description}
+ *
  * @author  xx
  * @version  [版本号, xx年xx月xx日]
  * @see  [相关类/方法]
@@ -26,6 +28,7 @@ import com.infosky.framework.entity.po.PO;
  */
 @Entity
 @Table(name="${table.name}")
+@Comment("${table.description}")
 public class ${table.eName} extends PO<String>
 {
     
@@ -34,6 +37,7 @@ public class ${table.eName} extends PO<String>
     	 * ${column.remarks}
     	 */
     	@Column(name="${column.columnName}")
+    	@Comment("${column.remarks}")
     	private ${column.javaType} ${column.propertyName};
     	
     	/**

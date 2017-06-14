@@ -25,7 +25,7 @@ public class OracleQuery extends AbstractQuery {
     private String password;
 
     public enum Type {
-        VARCHAR2("VARCHAR2", "String"), DOUBLE("NUMBER(n,m)", "double"), LONG("NUMBER(n)", "long"), TIMESTAMP("TIMESTAMP", "java.util.Date");
+        VARCHAR2("VARCHAR2", "String"), DOUBLE("NUMBER(n,m)", "double"), LONG("NUMBER(n)", "long"), TIMESTAMP("TIMESTAMP", "java.util.Date"),DATETIME("DATETIME", "java.util.Date");
 
         private String db_type;
 

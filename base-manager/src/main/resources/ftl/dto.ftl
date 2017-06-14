@@ -10,7 +10,11 @@
  */
 package ${project.rPackage}.${project.mName}.entity.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.infosky.framework.entity.dto.DTO;
+import com.infosky.framework.entity.utils.CustomJsonDateDeserialize;
+import com.infosky.framework.entity.utils.CustomJsonDateSerializer;
 
 /**
  * ${table.description}
@@ -27,6 +31,10 @@ public class ${table.eName}DTO extends DTO<String>
     	/**
     	 * ${column.remarks}
     	 */
+    	<#if column.javaType == "java.util.Date">
+    	@JsonSerialize(using = CustomJsonDateSerializer.class)
+    	@JsonDeserialize(using = CustomJsonDateDeserialize.class)
+		</#if>
     	private ${column.javaType} ${column.propertyName};
     	
     	/**

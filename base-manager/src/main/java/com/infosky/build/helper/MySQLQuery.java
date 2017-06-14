@@ -24,7 +24,7 @@ public class MySQLQuery extends AbstractQuery {
 
     public enum Type {
         VARCHAR("VARCHAR", "String"), BLOB("BLOB", "String"), BIGINT("BIGINT", "int"), INT("INT", "int"), FLOAT("FLOAT", "float"), DOUBLE("DOUBLE", "double"), DATE("DATE", "java.util.Date"), BOOLEAN(
-                "BOOLEAN", "boolean"), TIMESTAMP("TIMESTAMP", "java.util.Date");
+                "BOOLEAN", "boolean"), TIMESTAMP("TIMESTAMP", "java.util.Date"), DATETIME("DATETIME", "java.util.Date");
 
         private String db_type;
 

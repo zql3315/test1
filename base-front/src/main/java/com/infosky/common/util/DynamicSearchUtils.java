@@ -26,6 +26,7 @@ import com.infosky.common.query.jpa.Request;
 import com.infosky.common.query.jpa.SearchRequest;
 import com.infosky.common.query.jpa.Searchable;
 
+
 /**
  * 动态查询工具类
  * 
@@ -227,45 +228,47 @@ public abstract class DynamicSearchUtils {
      * @param sql
      * @return
      */
-    public static String toDynamicSql(List<Request> params, String prefix, StringBuffer sql) {
+    public static String toDynamicSql(List<Request> params, StringBuffer sql) {
+        sql.insert(0, " select * from ( ");
+        sql.append(" ) v_ where 1=1 ");
         for (int i = 0; i < params.size(); i++) {
             Request request = params.get(i);
             switch (request.getOperator()) {
                 case ISNULL:
-                    sql.append(" and " + prefix + request.getFieldName() + " is null ");
+                    sql.append(" and v_." + request.getFieldName() + " is null ");
                     break;
                 case ISNOTNULL:
-                    sql.append(" and " + prefix + request.getFieldName() + " is not null ");
+                    sql.append(" and v_." + request.getFieldName() + " is not null ");
                     break;
                 case EQ:
-                    sql.append(" and " + prefix + request.getFieldName() + " = ? ");
+                    sql.append(" and v_." + request.getFieldName() + " = ? ");
                     break;
                 case NEQ:
-                    sql.append(" and " + prefix + request.getFieldName() + " <> ? ");
+                    sql.append(" and v_." + request.getFieldName() + " <> ? ");
                     break;
                 case LIKE:
-                    sql.append(" and " + prefix + request.getFieldName() + " like ? ");
+                    sql.append(" and v_." + request.getFieldName() + " like ? ");
                     break;
                 case PRELIKE:
-                    sql.append(" and " + prefix + request.getFieldName() + " like ? ");
+                    sql.append(" and v_." + request.getFieldName() + " like ? ");
                     break;
                 case SUFLIKE:
-                    sql.append(" and " + prefix + request.getFieldName() + " like ? ");
+                    sql.append(" and v_." + request.getFieldName() + " like ? ");
                     break;
                 case GT:
-                    sql.append(" and " + prefix + request.getFieldName() + "  > ? ");
+                    sql.append(" and v_." + request.getFieldName() + "  > ? ");
                     break;
                 case LT:
-                    sql.append(" and " + prefix + request.getFieldName() + " < ? ");
+                    sql.append(" and v_." + request.getFieldName() + " < ? ");
                     break;
                 case GTE:
-                    sql.append(" and " + prefix + request.getFieldName() + " >= ? ");
+                    sql.append(" and v_." + request.getFieldName() + " >= ? ");
                     break;
                 case LTE:
-                    sql.append(" and " + prefix + request.getFieldName() + " <= ? ");
+                    sql.append(" and v_." + request.getFieldName() + " <= ? ");
                     break;
                 case IN:
-                    sql.append(" and " + prefix + request.getFieldName() + " in (?) ");
+                    sql.append(" and v_." + request.getFieldName() + " in (?) ");
                     break;
                 default:
                     break;

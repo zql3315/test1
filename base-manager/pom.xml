@@ -52,13 +52,19 @@
             <artifactId>json-lib</artifactId>
             <classifier>jdk15</classifier>
         </dependency>
-        <!-- qiniu -->
+        <!--   百度编辑器需要用到里面的json -->
+        <dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20170516</version>
+		</dependency>
+        <!-- qiniu 
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>sdk</artifactId>
             <version>6.0.2</version>
         </dependency>
-        
+        -->
         <!-- SPRING MVC -->
         <dependency>
             <groupId>org.springframework</groupId>

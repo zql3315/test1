@@ -27,6 +27,6 @@ public class PropertiesConfig {
     }
 
     public static String readValue(String key) {
-        return property.getProperty(key);
+        return property.getProperty(key).trim();
     }
 }

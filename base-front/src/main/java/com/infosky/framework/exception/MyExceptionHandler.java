@@ -33,7 +33,7 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
         model.put("result", false);
         PrintWriter out = null;
         model.put("exception", exception);
-        LOG.error("", exception);
+        LOG.error("url:"+httpservletrequest.getRequestURI(), exception);
         try {
             if (CommonUtil.useAjax(httpservletrequest)) {
                 response.setCharacterEncoding("UTF-8");

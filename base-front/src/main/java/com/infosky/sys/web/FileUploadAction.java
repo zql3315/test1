@@ -68,63 +68,46 @@ public class FileUploadAction {
             if (multipartResolver.isMultipart(request)) {
                 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
-                String upload = "upload/images/" + folderName + Calendar.getInstance().get(Calendar.YEAR) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "/"
-                        + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/";
-                String imagewebroot = PropertiesConfig.readValue("imagewebroot");
-                if (StringUtils.isBlank(imagewebroot)) {
-                    imagewebroot = request.getServletContext().getRealPath("/");
-                }
-                String path = imagewebroot + upload;
+                String relativeFilePath = getRelativeFilePath(folderName, "images");
+                String path = createFilePath(request, relativeFilePath);
 
                 Iterator<String> iter = multipartRequest.getFileNames();
-
-                String imageMaxSizeStr = PropertiesConfig.readValue("imageMaxSize");
-                int imageMaxSize = 1;
-
-                if (StringUtils.isNotBlank(imageMaxSizeStr)) {
-                    imageMaxSize = Integer.valueOf(imageMaxSizeStr);
-                }
 
                 while (iter.hasNext()) {
                     //取得上传文件
                     String fileName = iter.next();
                     MultipartFile file = multipartRequest.getFile(fileName);
 
-                    //获得文件信息
-                    if (file == null || file.getSize() == 0) {
-                        model.put("msg", "please chose  a file！");
-                    } else if (file.getSize() > imageMaxSize * 1024 * 1024) {
-                        //上传图片文件大小限制在1M内
-                        model.put("msg", "图片文件不能超过" + imageMaxSize + "M！");
+                    if (!checkFileSize(file, model)) {
+                        return model;
+                    }
+                    //源文件名
+                    String originalFilename = file.getOriginalFilename();
+                    //文件类型白名单
+                    String whitelist_mime = (String) (request.getAttribute("whitelist_mime") != null ? request.getAttribute("whitelist_mime") : request.getParameter("whitelist_mime"));
+                    if (StringUtils.isNotBlank(whitelist_mime) && !whitelist_mime.contains(file.getContentType())) {
+                        model.put("msg", "请上传正确的文件类型：" + whitelist_mime);
+                        break;
+                    }
+
+                    long time = new Date().getTime();
+                    originalFilename = time + originalFilename.substring(originalFilename.lastIndexOf("."));
+
+                    if (fileType.equals("img")) {
+                        iis = ImageIO.createImageInputStream(file.getInputStream());
+                        Iterator<ImageReader> imageReaderIte = ImageIO.getImageReaders(iis);
+                        if (!imageReaderIte.hasNext()) {
+                            // 文件不是图片
+                            model.put("msg", "这不是一个图片");
+                            break;
+                        }
+                        disposeImg(request, file, model, originalFilename, path);
                     } else {
-                        //源文件名
-                        String originalFilename = file.getOriginalFilename();
-                        //文件类型白名单
-                        String whitelist_mime = (String) (request.getAttribute("whitelist_mime") != null ? request.getAttribute("whitelist_mime") : request.getParameter("whitelist_mime"));
-                        if (StringUtils.isNotBlank(whitelist_mime) && !whitelist_mime.contains(file.getContentType())) {
-                            model.put("msg", "请上传正确的文件类型：" + whitelist_mime);
-                            break;
-                        }
-
-                        long time = new Date().getTime();
-                        originalFilename = time + originalFilename.substring(originalFilename.lastIndexOf("."));
-
-                        if (fileType.equals("img")) {
-                            iis = ImageIO.createImageInputStream(file.getInputStream());
-                            Iterator<ImageReader> imageReaderIte = ImageIO.getImageReaders(iis);
-                            if (!imageReaderIte.hasNext()) {
-                                // 文件不是图片
-                                model.put("msg", "这不是一个图片");
-                                break;
-                            }
-                            disposeImg(request, file, model, originalFilename, path);
-                        } else {
-                            model.put("msg", "非法文件");
-                            break;
-                        }
-                        if ((boolean) model.get("result")) {
-                            model.put("fileUrl", upload + originalFilename);
-                        }
+                        model.put("msg", "非法文件");
+                        break;
+                    }
+                    if ((boolean) model.get("result")) {
+                        model.put("fileUrl", getRelativeFilePath(folderName, "images") + originalFilename);
                     }
 
                     break;
@@ -182,62 +165,43 @@ public class FileUploadAction {
             // 判断 request 是否有文件上传,即多部分请求
             if (multipartResolver.isMultipart(request)) {
                 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-
-                String upload = "upload/images/" + folderName + Calendar.getInstance().get(Calendar.YEAR) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "/"
-                        + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/";
-                String imagewebroot = PropertiesConfig.readValue("imagewebroot");
-                if (StringUtils.isBlank(imagewebroot)) {
-                    imagewebroot = request.getServletContext().getRealPath("/");
-                }
-                String path = imagewebroot + upload;
-
+                String relativeFilePath = getRelativeFilePath(folderName, "video");
+                String path = createFilePath(request, relativeFilePath);
                 Iterator<String> iter = multipartRequest.getFileNames();
-
-                String videoMaxSizeStr = PropertiesConfig.readValue("videoMaxSize");
-                int videoMaxSize = 1;
-
-                if (StringUtils.isNotBlank(videoMaxSizeStr)) {
-                    videoMaxSize = Integer.valueOf(videoMaxSizeStr);
-                }
 
                 while (iter.hasNext()) {
                     // 取得上传文件
                     String fileName = iter.next();
                     MultipartFile file = multipartRequest.getFile(fileName);
-                    // 获得文件：
-                    if (file == null || file.getSize() == 0) {
-                        model.put("msg", "please chose  a file！");
-                    } else if (file.getSize() > videoMaxSize * 1024 * 1024) {
-                        //上传视频文件大小限制在5M内
-                        model.put("msg", "视频文件不能超过" + videoMaxSize + "M！");
+                    if (!checkFileSize(file, model)) {
+                        return model;
+                    }
+                    //源文件名
+                    String originalFilename = file.getOriginalFilename();
+                    //文件类型白名单
+                    String whitelist_mime = (String) (request.getAttribute("whitelist_mime") != null ? request.getAttribute("whitelist_mime") : request.getParameter("whitelist_mime"));
+                    if (StringUtils.isNotBlank(whitelist_mime) && !whitelist_mime.contains(file.getContentType())) {
+                        model.put("msg", "请上传正确的文件类型：" + whitelist_mime);
+                        break;
+                    }
+
+                    long time = new Date().getTime();
+                    originalFilename = time + originalFilename.substring(originalFilename.lastIndexOf("."));
+
+                    if (fileType.equals("video") && (file.getContentType().contains("video") || file.getContentType().contains("audio"))) {
+                        File targetFile = new File(path, originalFilename);
+                        if (!targetFile.exists()) targetFile.mkdirs();
+                        file.transferTo(targetFile);
+                        model.put("result", true);
+                    } else if (fileType.equals("video") && (!file.getContentType().contains("video") || !file.getContentType().contains("audio"))) {
+                        model.put("msg", "不是一个有效的视频文件");
+                        return model;
                     } else {
-                        //源文件名
-                        String originalFilename = file.getOriginalFilename();
-                        //文件类型白名单
-                        String whitelist_mime = (String) (request.getAttribute("whitelist_mime") != null ? request.getAttribute("whitelist_mime") : request.getParameter("whitelist_mime"));
-                        if (StringUtils.isNotBlank(whitelist_mime) && !whitelist_mime.contains(file.getContentType())) {
-                            model.put("msg", "请上传正确的文件类型：" + whitelist_mime);
-                            break;
-                        }
-
-                        long time = new Date().getTime();
-                        originalFilename = time + originalFilename.substring(originalFilename.lastIndexOf("."));
-
-                        if (fileType.equals("video") && (file.getContentType().contains("video") || file.getContentType().contains("audio"))) {
-                            File targetFile = new File(path, originalFilename);
-                            if (!targetFile.exists()) targetFile.mkdirs();
-                            file.transferTo(targetFile);
-                            model.put("result", true);
-                        } else if (fileType.equals("video") && (!file.getContentType().contains("video") || !file.getContentType().contains("audio"))) {
-                            model.put("msg", "不是一个有效的视频文件");
-                            return model;
-                        } else {
-                            model.put("msg", "非法文件");
-                            break;
-                        }
-                        if ((boolean) model.get("result")) {
-                            model.put("fileUrl", upload + originalFilename);
-                        }
+                        model.put("msg", "非法文件");
+                        break;
+                    }
+                    if ((boolean) model.get("result")) {
+                        model.put("fileUrl", relativeFilePath + originalFilename);
                     }
 
                     break;
@@ -264,6 +228,62 @@ public class FileUploadAction {
             }
         }
         return model;
+    }
+
+    /**
+     * 创建保存目录
+     * 
+     * @param folderName
+     * @param model
+     * @return
+     */
+    public String createFilePath(HttpServletRequest request, String relativeFilePath) {
+        String imagewebroot = PropertiesConfig.readValue("imagewebroot");
+        if (StringUtils.isBlank(imagewebroot)) {
+            imagewebroot = request.getServletContext().getRealPath("/");
+        }
+        return imagewebroot + relativeFilePath;
+    }
+
+    /**
+     * 获取相对路径
+     * 
+     * @param folderName
+     * @param model
+     * @return
+     */
+    public String getRelativeFilePath(String folderName, String type) {
+        if (StringUtils.isBlank(type)) {
+            type = "images";
+        }
+        return "/upload/" + type + "/" + folderName + Calendar.getInstance().get(Calendar.YEAR) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "/"
+                + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/";
+    }
+
+    /**
+     * 校验文件大小
+     * 
+     * @param file
+     * @param model
+     * @return
+     */
+    public boolean checkFileSize(MultipartFile file, Map<String, Object> model) {
+        String imageMaxSizeStr = PropertiesConfig.readValue("imageMaxSize");
+        int imageMaxSize = 1;
+        if (StringUtils.isNotBlank(imageMaxSizeStr)) {
+            imageMaxSize = Integer.valueOf(imageMaxSizeStr);
+        }
+        //获得文件信息
+        if (file == null || file.getSize() == 0) {
+            model.put("msg", "please chose  a file！");
+            return true;
+        } else if (file.getSize() > imageMaxSize * 1024 * 1024) {
+            //上传图片文件大小限制在1M内
+            model.put("msg", "图片文件不能超过" + imageMaxSize + "M！");
+            return true;
+        }
+
+        return true;
     }
 
     /**
@@ -295,48 +315,46 @@ public class FileUploadAction {
             // 判断 request 是否有文件上传,即多部分请求
             if (multipartResolver.isMultipart(request)) {
                 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+                String relativeFilePath = getRelativeFilePath(folderName, "file");
+                String path = createFilePath(request, relativeFilePath);
+                Iterator<String> iter = multipartRequest.getFileNames();
 
-                String multipartFile = request.getParameter("file");
-
-                if (StringUtils.isEmpty(multipartFile)) {
-                    multipartFile = "file";
-                }
-
-                // 获得文件：
-                MultipartFile file = multipartRequest.getFile(multipartFile);
-                if (file == null || file.getSize() == 0) {
-                    model.put("msg", "please chose  a file！");
-                } else {
-                    String upload = "upload/images/" + folderName + Calendar.getInstance().get(Calendar.YEAR) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "/"
-                            + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/";
-                    String imagewebroot = PropertiesConfig.readValue("imagewebroot");
-                    if (StringUtils.isBlank(imagewebroot)) {
-                        imagewebroot = request.getServletContext().getRealPath("/");
+                while (iter.hasNext()) {
+                    // 取得上传文件
+                    String file = iter.next();
+                    MultipartFile mulfile = multipartRequest.getFile(file);
+                    if (!checkFileSize(mulfile, model)) {
+                        return model;
                     }
-                    String path = imagewebroot + upload;
-                    if (file != null) {
-                        String fileName = file.getOriginalFilename();
-                        String whitelist_mime = (String) (request.getAttribute("whitelist_mime") != null ? request.getAttribute("whitelist_mime") : request.getParameter("whitelist_mime"));// 文件类型白名单
-                        if (StringUtils.isNotBlank(whitelist_mime) && !whitelist_mime.contains(file.getContentType())) {
-                            model.put("msg", "请上传正确的文件类型：" + whitelist_mime);
-                            return model;
-                        }
-                        long time = new Date().getTime();
-                        fileName = time + fileName.substring(fileName.lastIndexOf("."));
-                        if (fileType.equals("img")) {
-                            disposeImg(request, file, model, fileName, path);
-                        } else {
-                            File targetFile = new File(path, fileName);
-                            if (!targetFile.exists()) targetFile.mkdirs();
-                            file.transferTo(targetFile);
-                            model.put("result", true);
-                            model.put("msg", "上传成功");
-                        }
-                        if ((boolean) model.get("result")) {
-                            model.put("fileUrl", upload + fileName);
+                    // 获得文件：
+                    if (file == null || mulfile.getSize() == 0) {
+                        model.put("msg", "please chose  a file！");
+                    } else {
+                        if (file != null) {
+                            String fileName = mulfile.getOriginalFilename();
+                            String whitelist_mime = (String) (request.getAttribute("whitelist_mime") != null ? request.getAttribute("whitelist_mime") : request.getParameter("whitelist_mime"));// 文件类型白名单
+                            if (StringUtils.isNotBlank(whitelist_mime) && !whitelist_mime.contains(mulfile.getContentType())) {
+                                model.put("msg", "请上传正确的文件类型：" + whitelist_mime);
+                                return model;
+                            }
+                            long time = new Date().getTime();
+                            fileName = time + fileName.substring(fileName.lastIndexOf("."));
+                            if (fileType.equals("img")) {
+                                disposeImg(request, mulfile, model, fileName, path);
+                            } else {
+                                File targetFile = new File(path, fileName);
+                                if (!targetFile.exists()) targetFile.mkdirs();
+                                mulfile.transferTo(targetFile);
+                                model.put("result", true);
+                                model.put("msg", "上传成功");
+                            }
+                            if ((boolean) model.get("result")) {
+                                model.put("fileUrl", relativeFilePath + fileName);
+                            }
                         }
                     }
                 }
+
             } else {
                 model.put("msg", "please chose  a file！");
             }
@@ -459,13 +477,8 @@ public class FileUploadAction {
                 MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
                 // 取得request中的所有文件名
                 Iterator<String> iter = multiRequest.getFileNames();
-                String upload = "upload/files/" + folderName + Calendar.getInstance().get(Calendar.YEAR) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "/"
-                        + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/";
-                String imagewebroot = PropertiesConfig.readValue("imagewebroot");
-                if (StringUtils.isBlank(imagewebroot)) {
-                    imagewebroot = request.getServletContext().getRealPath("/");
-                }
-                String path = imagewebroot + upload;
+                String relativeFilePath = getRelativeFilePath(folderName, "file");
+                String path = createFilePath(request, relativeFilePath);
                 while (iter.hasNext()) {
                     // 取得上传文件
                     MultipartFile file = multiRequest.getFile(iter.next());
@@ -482,7 +495,7 @@ public class FileUploadAction {
                             if (!targetFile.exists()) targetFile.mkdirs();
                             // 保存
                             file.transferTo(targetFile);
-                            fileUrls.append(upload + fileName + ",");
+                            fileUrls.append(relativeFilePath + fileName + ",");
                         }
                         model.put("fileUrl", fileUrls);
                         model.put("result", "SUCCESS");

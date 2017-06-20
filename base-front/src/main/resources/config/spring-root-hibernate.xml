@@ -66,7 +66,8 @@
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.current_session_context_class">thread</prop>
-
+				<!-- 不加这个oracle同一实例不用用户下面不能有表名相同的情况出现 -->
+				<prop key="hibernate.default_schema">${jdbc.username}</prop>
 				<!-- 抓取策略 -->
 				<prop key="hibernate.max_fetch_depth">1</prop>
 				<prop key="hibernate.default_batch_fetch_size">4</prop>

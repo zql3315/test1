@@ -38,9 +38,12 @@ public class HttpFileUpload {
      * @param args
      */
     public static void main(String[] args) {
-        String filePath = "D:\\mysqlUser.png";
+        String filePath = "D:\\server.keystore";
         // String url = "http://y.archermind.com/xtms/xde/fileupload/fileupload/";
-        String url = "http://10.20.81.63:8080/hj-manager/fileUploads?folderName=wechathead";
+//        String url = "http://10.20.81.63:8080/hj-manager/fileUploads?folderName=wechathead";
+//        String url = "http://10.20.81.63:8080/hn-manager/upload/fileUpload?folderName=test";
+//        String url = "http://10.20.81.55:8080/pksb-wechat/fileUpload?folderName=test&type=file";
+        String url = "http://mp.wep.cn/pksb-wechat/fileUpload?folderName=test&type=file";
         System.out.println("================");
         String ret = uploadHttpPost(filePath, url);
         System.out.println("================" + JSONObject.fromObject(ret).toString());

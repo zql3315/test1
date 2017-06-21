@@ -1,9 +1,12 @@
 package com.infosky.sys.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +18,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +28,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.infosky.common.util.PropertiesConfig;
+import com.infosky.common.util.file.FileUtil;
 import com.infosky.common.util.image.ImageUtils;
 import com.infosky.common.util.image.ImgCutUtil;
 
@@ -242,6 +247,7 @@ public class FileUploadAction {
         if (StringUtils.isBlank(imagewebroot)) {
             imagewebroot = request.getServletContext().getRealPath("/");
         }
+        FileUtil.createDirectroy(imagewebroot + relativeFilePath);
         return imagewebroot + relativeFilePath;
     }
 
@@ -364,6 +370,81 @@ public class FileUploadAction {
             if (fis != null) {
                 try {
                     fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return model;
+    }
+
+    /**
+     * 上传BASE64编码后的文件字符串
+     * 
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/fileStrUpload")
+    @ResponseBody
+    public Map<String, Object> fileStrUpload(HttpServletRequest request) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        BufferedOutputStream stream = null;
+        model.put("result", false);
+        model.put("msg", "上传失败");
+        try {
+            String folderName = "";
+            folderName = request.getParameter("folderName");
+            String fileType = request.getParameter("type") == null ? "file" : request.getParameter("type");
+            if (StringUtils.isNotBlank(folderName)) {
+                folderName = folderName + "/";
+            } else {
+                folderName = "";
+            }
+
+            String suffix = request.getParameter("suffix");
+            if (StringUtils.isBlank(suffix)) {
+                model.put("msg", "缺少文件类型参数：suffix");
+                return model;
+            }
+            String fileStr = request.getParameter("fileStr");
+            if (fileStr == null) {
+                model.put("msg", "缺少文件BASE64字符串：fileStr");
+                return model;
+            }
+            fileStr = URLDecoder.decode(fileStr,"UTF-8");
+            fileStr = fileStr.replaceAll(" ", "+");
+            String imageMaxSizeStr = PropertiesConfig.readValue("imageMaxSize");
+            int imageMaxSize = 1;
+            if (StringUtils.isNotBlank(imageMaxSizeStr)) {
+                imageMaxSize = Integer.valueOf(imageMaxSizeStr);
+            }
+            if (fileStr.length() > imageMaxSize * 1024 * 1024) {
+                //上传图片文件大小限制在1M内
+                model.put("msg", "图片文件不能超过" + imageMaxSize + "M！");
+                return model;
+            }
+            String relativeFilePath = getRelativeFilePath(folderName, fileType);
+            String path = createFilePath(request, relativeFilePath);
+            String fileName = new Date().getTime() + "." + suffix;
+            //Base64解码
+            byte[] b = Base64.decodeBase64(fileStr);
+            for (int i = 0; i < b.length; ++i) {
+                if (b[i] < 0) {//调整异常数据
+                    b[i] += 256;
+                }
+            }
+            //生成jpeg图片
+            stream = new BufferedOutputStream(new FileOutputStream(path + fileName));
+            stream.write(b);
+            model.put("result", true);
+            model.put("msg", "上传成功");
+            model.put("fileUrl", relativeFilePath + fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

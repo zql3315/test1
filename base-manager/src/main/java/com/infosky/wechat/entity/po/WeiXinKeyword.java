@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -33,7 +34,8 @@ public class WeiXinKeyword extends PO<String> {
     @Comment(value = "关键字")
     private String keyword;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Lob
+    @Column(name = "description")
     @Comment(value = "文字描述")
     private String description;
 

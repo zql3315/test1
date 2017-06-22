@@ -295,6 +295,10 @@ public abstract class DynamicSearchUtils {
                 case SUFLIKE:
                     query.setParameter(i + 1, "%" + request.getValue());
                     break;
+                case ISNULL:
+                    break;
+                case ISNOTNULL:
+                    break;
                 default:
                     query.setParameter(i + 1, request.getValue());
                     break;

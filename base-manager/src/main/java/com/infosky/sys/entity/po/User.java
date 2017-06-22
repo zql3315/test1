@@ -92,19 +92,8 @@ public class User extends PO<String> {
     @Comment("用户手机号码")
     private String telephone;
 
-    @Comment("登录类型：0表示网页登录，1表示手机登录,其他待扩展")
-    private int loginType;
-
     @Comment("最后登录时间")
     private Date lastLogin;
-
-    public int getLoginType() {
-        return loginType;
-    }
-
-    public void setLoginType(int loginType) {
-        this.loginType = loginType;
-    }
 
     public Date getLastLogin() {
         return lastLogin;

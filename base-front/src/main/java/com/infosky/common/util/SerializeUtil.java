@@ -57,6 +57,16 @@ public class SerializeUtil {
      * @param bytes
      * @return
      */
+    public static Object unserialize(byte[] bytes) {
+        return deserialize(bytes);
+    }
+
+    /**
+     * 反序列化
+     * 
+     * @param bytes
+     * @return
+     */
     public static Object deserialize(byte[] bytes) {
 
         Object result = null;

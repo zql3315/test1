@@ -6,18 +6,18 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * 系统工具类
- *
- * @author n004881
- *
+ * 获取文件类型工具类
  */
-public class PropertiesConfig {
+public class HTTPContentTypeUtil {
 
     private static Properties property;
+
     static {
-        String path = Thread.currentThread().getContextClassLoader().getResource("constant.properties").getPath();
+        //InputStream file = HTTPContentTypeUtil.class.getResourceAsStream("mimetype.properties");
+        String path = Thread.currentThread().getContextClassLoader().getResource("mimetype.properties").getPath();
         try {
             property = new Properties();
+            //property.load(new FileInputStream("D:\\gittest\\test1\\base-front\\src\\main\\resources\\mimetype.properties"));
             property.load(new FileInputStream(path));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -26,7 +26,7 @@ public class PropertiesConfig {
         }
     }
 
-    public static String readValue(String key) {
-        return property.getProperty(key).trim();
+    public static String readValue(String suffix) {
+        return property.getProperty(suffix).trim();
     }
 }

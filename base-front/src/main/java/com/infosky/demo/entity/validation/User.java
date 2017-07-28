@@ -13,6 +13,10 @@ public class User {
     private String password;
 
     private int age;
+    
+    
+    @Pattern(regexp = "^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$|^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$", message = "身份证不合法")
+    private String idCard;
 
     @NotBlank(message = "用户名不能为空")
     @Pattern(regexp = "[a-zA-Z0-9_]{5,10}", message = "只能输入5到10位的字母或数字")

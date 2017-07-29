@@ -16,7 +16,6 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.google.gson.GsonBuilder;
-import com.infosky.demo.web.mywebsocket.MyWebSocket;
 
 /** 
  * WebSocketHandler的实现类
@@ -25,7 +24,7 @@ import com.infosky.demo.web.mywebsocket.MyWebSocket;
 public class MyWebSocketHandler implements WebSocketHandler {
 
     
-    private static final Logger logger = LoggerFactory.getLogger(MyWebSocket.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyWebSocketHandler.class);
     
     
     public static final Map<String, WebSocketSession> userSocketSessionMap;

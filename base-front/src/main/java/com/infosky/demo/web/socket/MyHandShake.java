@@ -22,14 +22,12 @@ public class MyHandShake extends HttpSessionHandshakeInterceptor {
         if (request.getHeaders().containsKey("Sec-WebSocket-Extensions")) {
             request.getHeaders().set("Sec-WebSocket-Extensions", "permessage-deflate");
         }
-
-        String jspCode = ((ServletServerHttpRequest) request).getServletRequest().getParameter("jspCode");
-        // 标记用户  
-        //String userId = (String) session.getAttribute("userId");  
+        //先从url上取，后期从session里面取
+        String jspCode = ((ServletServerHttpRequest) request).getServletRequest().getParameter("sessionUser");
         if (jspCode != null) {
-            attributes.put("jspCode", jspCode);
+            attributes.put("sessionUser", jspCode);
         } else {
-            attributes.put("jspCode", "default");
+            attributes.put("sessionUser", "default");
         }
         return true;
     }

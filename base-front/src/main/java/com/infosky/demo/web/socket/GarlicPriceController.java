@@ -28,10 +28,7 @@ public class GarlicPriceController {
     @RequestMapping(value = "demo/testWebSocket", produces = "application/json; charset=utf-8")
     @ResponseBody
     public String testWebSocket(HttpServletRequest request) throws IOException {
-        Object sessionUser = (String) request.getSession().getAttribute("sessionUser");
-        if(sessionUser!=null){
-            myWebSocketHandler.sendMessageToJsp(new TextMessage(new GsonBuilder().create().toJson("\"number\":\"" + "GarlicPriceController/testWebSocket" + "\"")));
-        }
+        myWebSocketHandler.sendMessageToJsp(new TextMessage(new GsonBuilder().create().toJson("\"number\":\"" + "GarlicPriceController/testWebSocket" + "\"")));
         return "1";
     }
 

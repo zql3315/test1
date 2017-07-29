@@ -36,10 +36,10 @@ public class MyWebSocketHandler implements WebSocketHandler {
     //连接建立后处理
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        logger.info("Socket会话连接:用户ID:" + session.getId());
-        String jspCode = (String) session.getAttributes().get("sessionUser");
-        if (jspCode!=null && userSocketSessionMap.get(jspCode) == null) {
-            userSocketSessionMap.put(jspCode, session);
+        String sessionUser = (String) session.getAttributes().get("sessionUser");
+        logger.info("Socket会话连接:用户ID:{},用户名称：{}", session.getId(),sessionUser);
+        if (sessionUser!=null && userSocketSessionMap.get(sessionUser) == null) {
+            userSocketSessionMap.put(sessionUser, session);
         }
         for (int i = 0; i < 10; i++) {
             //broadcast(new TextMessage(new GsonBuilder().create().toJson("\"number\":\""+i+"\"")));  

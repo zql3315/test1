@@ -9,11 +9,19 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="websocketEndPoint" class="com.infosky.demo.web.websocket.WebsocketEndPoint" />
-	<websocket:handlers>
+	<websocket:handlers allowed-origins="*">
 		<websocket:mapping path="/demo/websocket" handler="websocketEndPoint" />
 		<websocket:handshake-interceptors>
 			<bean class="com.infosky.demo.web.websocket.HandshakeInterceptor" />
 		</websocket:handshake-interceptors>
 	</websocket:handlers>
 
-</beans>	
+	<websocket:handlers allowed-origins="*">
+		<websocket:mapping path="/demo/sockjs/websocket" handler="websocketEndPoint" />
+		<websocket:handshake-interceptors>
+			<bean class="com.infosky.demo.web.websocket.HandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		<websocket:sockjs />
+	</websocket:handlers>
+
+</beans>

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.infosky.common.util.SerializeUtil;
-import com.infosky.redis.RedisUtil;
+import com.infosky.redis.service.RedisUtilsService;
 
 /**
  * 用redis重写shrio的sessionDAO
@@ -44,7 +44,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
     private int expire = 30 * 60;
 
     @Autowired
-    private RedisUtil redisUtil;
+    RedisUtilsService redisUtil;
 
     @Autowired
     private HttpServletRequest request;

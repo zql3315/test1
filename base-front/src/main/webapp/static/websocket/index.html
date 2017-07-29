@@ -34,7 +34,7 @@
 }
 </style>
 
-<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+<script src="js/sockjs-0.3.min.js"></script>
 
 <script type="text/javascript">  
         var ws = null;  
@@ -127,8 +127,10 @@
 	</noscript>
 	<div>
 		<div id="connect-container">
-			<input id="radio1" type="radio" name="group1" onclick="updateUrl('/sgkj-manager/demo/websocket');"> <label for="radio1">W3C WebSocket</label> <br> <input id="radio2" type="radio"
-				name="group1" onclick="updateUrl('/sgkj-manager/demo/websocket');"> <label for="radio2">SockJS</label>
+			<input id="radio1" type="radio" name="group1" onclick="updateUrl('/sgkj-manager/demo/websocket');"> 
+			<label for="radio1">W3C WebSocket</label> <br> 
+			<input id="radio2" type="radio" name="group1" onclick="updateUrl('/sgkj-manager/demo/sockjs/websocket');"> 
+			<label for="radio2">SockJS</label>
 			<div id="sockJsTransportSelect" style="visibility:hidden;">
 				<span>SockJS transport:</span> <select onchange="updateTransport(this.value)">
 					<option value="all">all</option>

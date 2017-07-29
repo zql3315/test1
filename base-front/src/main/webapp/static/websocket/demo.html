@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WebSocket/SockJS Echo Sample (Adapted from Tomcat's echo sample)</title>
+<script src="js/sockjs-0.3.min.js"></script>
+<script type="text/javascript">
+	var transports = []; 
+	var path = window.location.host+'/sgkj-manager/';
+	var userId = 'lys';
+	if (userId == -1) {
+		window.location.href = "sgkj-manager/";
+	}
+	var name = getQueryString("name") || "AAAA";
+	var jspCode = userId + "_"+name;
+	var websocket;
+	if ('WebSocket' in window) {
+		websocket = new WebSocket("ws://" + path + "demo/wsMy?jspCode=" + jspCode);
+	} else if ('MozWebSocket' in window) {
+		websocket = new MozWebSocket("ws://" + path + "demo/wsMy?jspCode=" + jspCode);
+	} else {
+		websocket = new SockJS("http://" + path + "demo/wsMy/sockjs", undefined, {protocols_whitelist: transports});
+	}
+	websocket.onopen = function(event) {
+		console.log("WebSocket:已连接");
+		console.log(event);
+	};
+	
+	websocket.onmessage = function(event) {
+		var data = JSON.parse(event.data);
+		console.log("WebSocket:收到一条消息-norm", data);
+ 		var show = document.getElementById('message');  
+        var p = document.createElement('p');
+        p.style.wordWrap = 'break-word';
+        p.appendChild(document.createTextNode("WebSocket:收到一条消息-norm:"+ data));
+        show.appendChild(p);
+	};
+	websocket.onerror = function(event) {
+		console.log("WebSocket:发生错误 ");
+		console.log(event);
+	};
+	websocket.onclose = function(event) {
+		console.log("WebSocket:已关闭");
+		console.log(event);
+	}
+	
+	function getQueryString(name) { 
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+		var r = window.location.search.substr(1).match(reg); 
+		if (r != null) return unescape(r[2]); return null; 
+	} 
+</script>
+</head>
+<body>
+	<noscript>
+		<h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websockets rely on Javascript being enabled. Please enable Javascript and reload this page!</h2>
+	</noscript>
+	<div id="message">6666</div>
+</body>
+</html>

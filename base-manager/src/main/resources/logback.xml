@@ -25,24 +25,70 @@
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</encoder>
 	</appender>
-    <!-- 按照每天生成日志文件, 保存30天的日志文件 -->   
-    <appender name="TIME_FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">   
-        <Encoding>UTF-8</Encoding>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--日志文件输出的文件名-->
-            <FileNamePattern>${user.dir}/logs/base-manager.log.%d{yyyy-MM-dd}.log</FileNamePattern>   
-            <MaxHistory>30</MaxHistory>
-        </rollingPolicy>   
-        <layout class="ch.qos.logback.classic.PatternLayout">  
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符--> 
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n   
-            </pattern>   
-       </layout> 
-        <!--日志文件最大的大小-->
-       <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-         <MaxFileSize>10MB</MaxFileSize>
-       </triggeringPolicy>
-    </appender> 
+    <!-- 按照每天生成日志文件, 保存30天的日志文件 -->
+	<!-- DEBUG -->
+	<appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<!-- 文件路径 -->
+		<file>${user.dir}/logs/base-manager/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${user.dir}/logs/base-manager/debug.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n </pattern>
+		</layout>
+		<!-- 只允许打印相应级别日志到文件 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- INFO -->
+	<appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<!-- 文件路径 -->
+		<file>${user.dir}/logs/base-manager/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${user.dir}/logs/base-manager/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n </pattern>
+		</layout>
+		<!-- 只允许打印相应级别日志到文件 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- ERROR -->
+	<appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<!-- 文件路径 -->
+		<file>${user.dir}/logs/base-manager/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${user.dir}/logs/base-manager/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n </pattern>
+		</layout>
+		<!-- 只允许打印相应级别日志到文件 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
 	
 	<!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->  
     <logger name="org.hibernate" level="WARN" />  
@@ -68,11 +114,17 @@
 <!--      <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />   -->
 	
 	<!--这里指定logger name 是为jmx设置日志级别做铺垫 DEBUG < INFO < WARN < ERROR < FATAL -->
-	<logger name="com.infosky" level="info"></logger>
-	<root  level="info">
+	<!-- additivity true 信息向上级传递，而且logger本身打印一次  默认true-->
+	<!-- 生产环境用info -->
+	<logger name="com.infosky" level="debug" additivity="true">
+		<appender-ref ref="debugAppender" />
+		<appender-ref ref="infoAppender" />
+		<appender-ref ref="errorAppender" />
+	</logger>
+
+	<root level="info">
 		<!-- <level value="DEBUG" /> -->
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</root>
 	
 </configuration>  

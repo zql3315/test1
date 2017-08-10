@@ -62,8 +62,12 @@ public class LoginController {
     @RequestMapping(method = RequestMethod.POST)
     public String fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String username, Map<String, Object> map, ServletRequest request) {
 
+        Subject subject = SecurityUtils.getSubject();
+        //解决用户登录后从首页退出到登陆页无法登陆的问题
+        if(subject.isAuthenticated()){
+            return "index";
+        }
         String msg = parseException(request);
-
         map.put("msg", msg);
         map.put("username", username);
 

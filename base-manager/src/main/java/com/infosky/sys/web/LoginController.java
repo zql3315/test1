@@ -65,7 +65,7 @@ public class LoginController {
         Subject subject = SecurityUtils.getSubject();
         //解决用户登录后从首页退出到登陆页无法登陆的问题
         if(subject.isAuthenticated()){
-            return "index";
+            return "redirect:index";
         }
         String msg = parseException(request);
         map.put("msg", msg);

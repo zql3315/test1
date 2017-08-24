@@ -62,7 +62,7 @@ public class UserService extends JpaService<User, UserDTO, PageResult<UserDTO>, 
             user.setPassword("123456");
         }
 
-        byte[] hashPassword = Digests.sha1(user.getPassword().getBytes(), user.getSalt().getBytes(), 1024);
+        byte[] hashPassword = Digests.sha1(user.getPassword().getBytes(), salt, 1024);
         user.setPassword(Encodes.encodeHex(hashPassword));
 
         user = dao.save(user);

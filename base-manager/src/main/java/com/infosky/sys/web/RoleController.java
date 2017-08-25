@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.infosky.common.query.jpa.Operator;
+import com.infosky.common.query.jpa.SearchRequest;
 import com.infosky.common.query.jpa.Searchable;
 import com.infosky.common.util.DynamicSearchUtils;
 import com.infosky.framework.annotation.Description;
@@ -29,7 +31,9 @@ import com.infosky.framework.service.PagingService;
 import com.infosky.framework.web.CrudController;
 import com.infosky.framework.web.PageResult;
 import com.infosky.sys.entity.dto.RoleDTO;
+import com.infosky.sys.service.impl.PermissionService;
 import com.infosky.sys.service.impl.RoleService;
+import com.infosky.sys.service.impl.UserService;
 
 /**
  * 表操作
@@ -46,6 +50,12 @@ public class RoleController extends CrudController<String, PageResult<RoleDTO>, 
 
     @Autowired
     private RoleService service;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger logger = LoggerFactory.getLogger(CrudController.class);
 
@@ -127,9 +137,37 @@ public class RoleController extends CrudController<String, PageResult<RoleDTO>, 
             result.put("code", "0001"); //code = 0001代表角色名称重复
             return result;
         }
-
+        Subject user = SecurityUtils.getSubject();
+        b.setCreator(user.getPrincipal().toString());
         try {
             service.updateRole(b);
+            result.put("result", true);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "delete")
+    @ResponseBody
+    @Description(value = "根据多个id批量删除用户")
+    public Map<String, Object> delete(@RequestBody RoleDTO b) {
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("result", false);
+        try {
+            //检查该角色下面是否有用户
+            int count = service.findRoleCount(service.find(b.getId()));
+            //校验用户登录名称是否重复
+            if (count != 0) {
+                result.put("code", "0001");
+                return result;
+            }
+            //删除角色关联的资源权限
+            Searchable s = new SearchRequest();
+            s.addSearchParam("role.id", Operator.EQ, b.getId());
+            permissionService.delete(s);
+            service.delete(b);
             result.put("result", true);
         } catch (Exception e) {
             logger.error("", e);
@@ -141,19 +179,25 @@ public class RoleController extends CrudController<String, PageResult<RoleDTO>, 
     @RequestMapping(value = "deleteRole")
     @ResponseBody
     @Description(value = "根据多个id批量删除用户")
-    public Map<String, Object> deleteRole(@RequestBody List<RoleDTO> b) {
+    public Map<String, Object> deleteRole(@RequestBody List<RoleDTO> roles) {
         Map<String, Object> result = Maps.newHashMap();
         result.put("result", false);
         try {
-            for (RoleDTO roleDTO : b) {
-                int count = service.findRoleCount(service.find(roleDTO.getId()));
-                //校验用户登录名称是否重复
+            //检查该角色下面是否有用户
+            for (RoleDTO role : roles) {
+                int count = service.findRoleCount(service.find(role.getId()));
                 if (count != 0) {
                     result.put("code", "0001");
                     return result;
                 }
             }
-            service.deleteAll(b);
+            //删除角色关联的资源权限
+            for (RoleDTO role : roles) {
+                Searchable s = new SearchRequest();
+                s.addSearchParam("role.id", Operator.EQ, role.getId());
+                permissionService.delete(s);;
+            }
+            service.deleteAll(roles);
             result.put("result", true);
         } catch (Exception e) {
             logger.error("", e);

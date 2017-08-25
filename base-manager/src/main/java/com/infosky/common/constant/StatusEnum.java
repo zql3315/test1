@@ -40,8 +40,6 @@ public enum StatusEnum {
     /**
      * @Desc : 值与中文名称映射列表，用于界面的下拉选项框
      *      LinkedHashMap: 保证输出和输入的顺序相同
-     * @author HZ
-     * @create: 2015-10-26 上午11:52:08
      */
     public static final Map<Integer, String> SEASONSMAP = new LinkedHashMap<Integer, String>();
     static {
@@ -52,8 +50,6 @@ public enum StatusEnum {
 
     /**
      * @Desc : 值与英文名称映射列表，用于界面的下拉选项框
-     * @author HZ
-     * @create: 2015-10-26 上午11:53:24
      */
     public static final Map<Integer, String> SEASONSMAP_EN = new LinkedHashMap<Integer, String>();
     static {

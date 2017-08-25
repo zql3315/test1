@@ -41,20 +41,20 @@ public enum StatusEnum {
      * @Desc : 值与中文名称映射列表，用于界面的下拉选项框
      *      LinkedHashMap: 保证输出和输入的顺序相同
      */
-    public static final Map<Integer, String> SEASONSMAP = new LinkedHashMap<Integer, String>();
+    public static final Map<Integer, String> STATUSMAP = new LinkedHashMap<Integer, String>();
     static {
         for (StatusEnum enumObj : StatusEnum.values()) {
-            SEASONSMAP.put(enumObj.getValue(), enumObj.getChDescription());
+            STATUSMAP.put(enumObj.getValue(), enumObj.getChDescription());
         }
     }
 
     /**
      * @Desc : 值与英文名称映射列表，用于界面的下拉选项框
      */
-    public static final Map<Integer, String> SEASONSMAP_EN = new LinkedHashMap<Integer, String>();
+    public static final Map<Integer, String> STATUSMAP_EN = new LinkedHashMap<Integer, String>();
     static {
         for (StatusEnum enumObj : StatusEnum.values()) {
-            SEASONSMAP_EN.put(enumObj.getValue(), enumObj.getEnDescription());
+            STATUSMAP_EN.put(enumObj.getValue(), enumObj.getEnDescription());
         }
     }
 }

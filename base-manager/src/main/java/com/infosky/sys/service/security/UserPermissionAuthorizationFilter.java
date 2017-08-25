@@ -65,29 +65,36 @@ public class UserPermissionAuthorizationFilter extends PermissionsAuthorizationF
         return false;
     }
 
+    /**
+     * 请求URL禁止带占位符，否则权限无法判断是参数还是url
+     **/
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+
         Subject subject = getSubject(request, response);
-        if (subject.getPrincipal().toString().equals("admin")) {
-            return true;
-        }
         String perms[] = (String[]) mappedValue;
         boolean isPermitted = super.isAccessAllowed(request, response, mappedValue);
         if (isPermitted) {// 当父类权限拦截成功后 再进行一下URL的鉴权
-            HttpServletRequest httpServletRequest = (javax.servlet.http.HttpServletRequest) request;
-            String URI = httpServletRequest.getRequestURI().replace(httpServletRequest.getContextPath(), "");
-            if (URI.contains("/static/")) return true;
-            if (URI.contains("/toEdit/") || URI.contains("/view/") || URI.contains("/params/") || URI.equals("/") || URI.equals("/index")) {
-                URI = URI.substring(0, URI.lastIndexOf("/"));
+            if (subject.getPrincipal().toString().equals("admin")) {
                 return true;
             }
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            String URI = httpServletRequest.getRequestURI().replace(httpServletRequest.getContextPath(), "");
+            if (URI.contains("/static/") || URI.equals("/") || URI.equals("/index") || URI.equals("/checkUserSession")) return true;
+            if (URI.indexOf("/toEdit/") > 0) {
+                URI = URI.substring(0, URI.indexOf("/toEdit") + 7);
+            }
+            if (URI.indexOf("/view/") > 0) {
+                URI = URI.substring(0, URI.indexOf("/view") + 5);
+            }
             Object urlPerm = cache.getCache("urlPermCache").get(URI);
+
             perms = new String[1];
             if (urlPerm != null && StringUtils.hasText(urlPerm.toString())) {
                 perms[0] = urlPerm.toString();
             } else {
                 ResourceService service = (ResourceService) WebUtil.getContext().getBean("resourceService");
                 Searchable s = new SearchRequest();
-                s.addSearchParam("url", Operator.PRELIKE, URI);
+                s.addSearchParam("url", Operator.EQ, URI);
                 List<ResourceDTO> resourceDTOList = (List<ResourceDTO>) service.findAll(s);
                 if (resourceDTOList != null && resourceDTOList.size() > 0) {
                     perms = new String[resourceDTOList.size()];
@@ -96,25 +103,25 @@ public class UserPermissionAuthorizationFilter extends PermissionsAuthorizationF
                         List<String> list = Lists.newArrayList();
                         list = getPermPattern(resourceDTO, list);
                         Collections.reverse(list);
-                        if (resourceDTO.getType().equals("2")) {//页面模块默认加上查询权限
-                            list.add("view");
-                        }
+                        list.add("view");
                         perms[i] = org.apache.commons.lang3.StringUtils.join(list, ":").toString();
                         cache.getCache("urlPermCache").put(URI, perms[i]);
                     }
-                }
-            }
-            for (String perm : perms) {
-                if (perm != null && subject.isPermitted(perm) || subject.getPrincipal().toString().equals("admin")) {
-                    isPermitted = true;
-                    break;
-                } else {
-                    isPermitted = false;
+                    if (perms != null && perms.length > 0) {
+                        for (String perm : perms) {
+                            if (perm != null && subject.isPermitted(perm)) {
+                                isPermitted = true;
+                                break;
+                            } else {
+                                isPermitted = false;
+                            }
+                        }
+                    }
                 }
             }
         }
         return isPermitted;
-        //		return super.isAccessAllowed(request, response, mappedValue);
+        //      return super.isAccessAllowed(request, response, mappedValue);
     }
 
     private List<String> getPermPattern(ResourceDTO resource, List<String> list) {

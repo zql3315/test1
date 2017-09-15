@@ -1,0 +1,55 @@
+package com.infosky.demo.service.impl;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import net.sf.json.JSONArray;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.infosky.demo.dao.DemoDAO;
+import com.infosky.demo.entity.dto.DemoDTO;
+import com.infosky.demo.entity.po.Demo;
+import com.infosky.framework.dao.DAO;
+import com.infosky.framework.service.JpaService;
+import com.infosky.framework.web.PageResult;
+
+/**
+ * <一句话功能简述>
+ * <功能详细描述>
+ * 
+ * @author  xx
+ * @version  [版本号, xx年xx月xx日]
+ * @see  [相关类/方法]
+ * @since  [产品/模块版本]
+ */
+@Service
+@Transactional
+public class DemoService extends JpaService<Demo, DemoDTO, PageResult<DemoDTO>, String> {
+
+    @Autowired
+    private DemoDAO dao;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    public void testSql() {
+        String sql = "select d from Demo d";
+        Query query = em.createQuery(sql);
+        List<Demo> list = query.getResultList();
+        System.out.println(JSONArray.fromObject(list));
+
+    }
+
+    /** {@inheritDoc} */
+
+    @Override
+    protected DAO<Demo, String> getDAO() {
+        return dao;
+    }
+}

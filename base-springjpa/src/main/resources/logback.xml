@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- scan为true后，当配置文件修改后自动重新加载，默认每分钟扫描一次。 -->
+<!-- debug为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false  -->
+<configuration debug="false" scan="false" scanPeriod="30 minutes">
+	<jmxConfigurator />
+	<contextName>base-manager</contextName> 
+	<!-- 控制台输出日志 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		 <encoder> 
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		 </encoder>  
+	</appender>
+	<!-- 文件输出日志 (文件大小策略进行文件输出，超过指定大小对文件备份) -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${user.dir}/logs/base-manager.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>base-manager.log.%i.bak</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>12</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+		<encoder> 
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</encoder>
+	</appender>
+    <!-- 按照每天生成日志文件, 保存30天的日志文件 -->
+	<!-- DEBUG -->
+	<appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<!-- 文件路径 -->
+		<file>${user.dir}/logs/base-manager/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${user.dir}/logs/base-manager/debug.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n </pattern>
+		</layout>
+		<!-- 只允许打印相应级别日志到文件 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- INFO -->
+	<appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<!-- 文件路径 -->
+		<file>${user.dir}/logs/base-manager/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${user.dir}/logs/base-manager/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n </pattern>
+		</layout>
+		<!-- 只允许打印相应级别日志到文件 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!-- ERROR -->
+	<appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<!-- 文件路径 -->
+		<file>${user.dir}/logs/base-manager/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${user.dir}/logs/base-manager/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n </pattern>
+		</layout>
+		<!-- 只允许打印相应级别日志到文件 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	<!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->  
+    <logger name="org.hibernate" level="WARN" />  
+    <logger name="org.springframework" level="info" />  
+    <logger name="com.opensymphony" level="WARN" />  
+<!--     <logger name="org.apache" level="WARN" />   -->
+    <logger name="org.dozer.config.GlobalSettings"  level="error" />   
+    <logger name="org.dozer.DozerInitializer"  level="error" />   
+    <logger name="org.dozer.jmx.JMXPlatformImpl"  level="error" />   
+    <logger name="org.dozer.DozerBeanMapper"  level="error" />   
+    <logger name="org.dozer.MappingProcessor"  level="error" />   
+    <logger name="org.dozer.fieldmap.FieldMap"  level="error" />   
+    <logger name="net.sf.ehcache.Cache"  level="warn" />
+<!--     <logger name="org.apache.shiro"  level="trace" />    -->
+    
+	 <!-- show parameters for hibernate sql 专为 Hibernate 定制 -->  
+<!--      <logger name="org.hibernate.type.descriptor.sql.BasicBinder"  level="TRACE" />    -->
+<!--      <logger name="org.hibernate.type.descriptor.sql.BasicExtractor"  level="DEBUG" />    -->
+     <logger name="org.hibernate.type.BasicTypeRegistry"  level="error" />   
+<!--      <logger name="org.hibernate.SQL" level="DEBUG" /> -->
+<!--       <logger name="org.hibernate.type" level="TRACE" /> -->
+<!--      <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />    -->
+<!--      <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />   -->
+	
+	<!--这里指定logger name 是为jmx设置日志级别做铺垫 DEBUG < INFO < WARN < ERROR < FATAL -->
+	<!-- additivity true 信息向上级传递，而且logger本身打印一次  默认true-->
+	<!-- 生产环境用info -->
+	<logger name="com.infosky" level="debug" additivity="true">
+		<appender-ref ref="debugAppender" />
+		<appender-ref ref="infoAppender" />
+		<appender-ref ref="errorAppender" />
+	</logger>
+
+	<root level="info">
+		<!-- <level value="DEBUG" /> -->
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+</configuration>  

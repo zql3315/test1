@@ -62,6 +62,7 @@
 							});
 							
 						}
+						d["sort"] ='{"data":[{"fileName":"visitTime","sort":"asc"}]}';
 					}
 				},
 				'columns' :[{"title" : '<label class="position-relative">'

@@ -6,6 +6,8 @@
  */
 package org.hibernate.cfg;
 
+import static org.hibernate.internal.CoreLogging.messageLogger;
+
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,7 +148,6 @@ import org.hibernate.cfg.annotations.TableBinder;
 import org.hibernate.engine.OptimisticLockStyle;
 import org.hibernate.engine.spi.FilterDefinition;
 import org.hibernate.id.PersistentIdentifierGenerator;
-import org.hibernate.internal.CoreLogging;
 import org.hibernate.internal.CoreMessageLogger;
 import org.hibernate.internal.util.StringHelper;
 import org.hibernate.loader.PropertyPath;
@@ -166,8 +167,6 @@ import org.hibernate.mapping.SingleTableSubclass;
 import org.hibernate.mapping.Subclass;
 import org.hibernate.mapping.ToOne;
 import org.hibernate.mapping.UnionSubclass;
-
-import static org.hibernate.internal.CoreLogging.messageLogger;
 
 /**
  * JSR 175 annotation binder which reads the annotations from classes, applies the

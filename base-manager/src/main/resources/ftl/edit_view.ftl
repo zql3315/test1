@@ -65,7 +65,11 @@
 					if ($.isArray(formData)) {
 						var d={};
 						$.each(formData, function(i, item) {
-							if (item.name && item.value) {
+							if(item.name.indexOf(".") > 0 && item.value ){
+                                var temp={};
+                                temp[item.name.substr(item.name.indexOf(".")+1)] = item.value;
+                                d[item.name.substr(0,item.name.indexOf("."))] = temp;
+                            }else 	if (item.name && item.value) {
 								d[item.name] = item.value;
 							}
 						});

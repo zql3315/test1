@@ -1,25 +1,15 @@
 package com.infosky.sys.service.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -32,19 +22,14 @@ import com.infosky.common.query.jpa.Operator;
 import com.infosky.common.query.jpa.SearchRequest;
 import com.infosky.common.query.jpa.Searchable;
 import com.infosky.common.util.DynamicSearchUtils;
-import com.infosky.common.util.date.DateUtils;
 import com.infosky.framework.dao.DAO;
 import com.infosky.framework.service.JpaService;
 import com.infosky.framework.web.PageResult;
-import com.infosky.notify.dao.NotificationDAO;
-import com.infosky.notify.entity.po.Notification;
 import com.infosky.sys.dao.ResourceDAO;
 import com.infosky.sys.entity.dto.PermissionDTO;
 import com.infosky.sys.entity.dto.ResourceDTO;
 import com.infosky.sys.entity.po.Permission;
 import com.infosky.sys.entity.po.Resource;
-import com.infosky.task.dao.TaskDAO;
-import com.infosky.task.entity.po.Task;
 
 /**
  * <一句话功能简述>

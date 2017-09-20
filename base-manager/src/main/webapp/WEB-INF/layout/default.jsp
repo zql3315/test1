@@ -82,7 +82,8 @@
 
 <!-- chosen -->
 <script src="${ctx}/static/chosen/js/chosen.jquery.js"></script>
-
+<!-- validate -->
+<script src="${ctx}/static/jquery-validation/1.11.1/messages_bs_zh.js"></script>
 <!-- custom -->
 <script src="${ctx}/static/custom/b2r.min.js"></script>
 <script src="${ctx}/static/bootstrap/js/common.js"></script>

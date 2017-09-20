@@ -209,7 +209,7 @@
 				login();
 			});
 			$("#captcha").on("focus",function(){
-				refreshCaptcha();
+				//refreshCaptcha();
 			});
 			
 		    $('#username').bind('keyup', function(event) {

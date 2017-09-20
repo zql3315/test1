@@ -49,6 +49,12 @@ public class Area extends PO<String> {
     private int isHot;
 
     /**
+     * 权重
+     */
+    @Comment("权重")
+    private int weight;
+
+    /**
      * 父节点
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,6 +68,14 @@ public class Area extends PO<String> {
             CascadeType.REMOVE, CascadeType.PERSIST
     }, orphanRemoval = true)
     private List<Area> children = Lists.newArrayList();
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     public int getIsHot() {
         return isHot;

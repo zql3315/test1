@@ -34,6 +34,11 @@ public class AreaDTO extends DTO<String> {
     private int level;
 
     /**
+     * 权重
+     */
+    private int weight;
+
+    /**
      * 热门类型0默认,1热门城市 其他待扩展
      */
     private int isHot;
@@ -48,6 +53,14 @@ public class AreaDTO extends DTO<String> {
      */
     @JsonIgnore
     private List<AreaDTO> children = Lists.newArrayList();
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     public int getIsHot() {
         return isHot;

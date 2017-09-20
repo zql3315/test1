@@ -201,25 +201,26 @@
 	<script src="${ctx}/static/datatable/js/jquery.js"></script>
 	<script type="text/javascript">
 
-	
-	$(".page-content").on('click',"button[type='reset']",function(e){
-		$(".search-choice-close").remove();
-		$(".btn-purple + input").val("");
-		$(".ace-file-container").attr("data-title","选择文件");
-		$(".ace-file-container").removeClass("selected");
-		$(".ace-file-container  .ace-file-name").attr("data-title","请选择一个图片");
-		$(".ace-file-container  .ace-file-name .ace-icon").removeClass().addClass(" ace-icon fa fa-upload ");
-		$.each($(".chosen-single"), function(i, item) {
-			$(this).removeClass("chosen-single-with-deselect").addClass("chosen-default");
-			var str = $(this).parent().parent().find(".chosen-select").attr("data-placeholder");
-			$(this ).find("span").text(str);
+		//重置选择文件按钮
+		$(".page-content").on('click',"button[type='reset']",function(e){
+			$(".search-choice-close").remove();
+			$(".btn-purple + input").val("");
+			$(".ace-file-container").attr("data-title","选择文件");
+			$(".ace-file-container").removeClass("selected");
+			$(".ace-file-container  .ace-file-name").attr("data-title","请选择一个图片");
+			$(".ace-file-container  .ace-file-name .ace-icon").removeClass().addClass(" ace-icon fa fa-upload ");
+			$.each($(".chosen-single"), function(i, item) {
+				$(this).removeClass("chosen-single-with-deselect").addClass("chosen-default");
+				var str = $(this).parent().parent().find(".chosen-select").attr("data-placeholder");
+				$(this ).find("span").text(str);
+			});
 		});
-	});
 	
 		$.ajaxSetup ({
 		    cache: false //关闭AJAX相应的缓存
 		});
 		
+		//左边菜单点击
 		$(document).on('click'+'.ace.submenu', '.sidebar .nav-list', function (ev) {
 			var nav_list = this;
 			//check to see if we have clicked on an element which is inside a .dropdown-toggle element?!
@@ -327,6 +328,26 @@
 			breadcrumb_items.reverse();
 			return breadcrumb_items;
 		};
+		/**
+		* 重置导航
+		*/
+		var setBreadcrumb = function(lasturl, text) {
+			if(!text) {
+				text = "";
+			}
+			//breadcrumb
+			var breadcrumb_items = getBreadcrumb();
+			breadcrumb_items.reverse();
+			//取出当前页面导航添加链接
+			var lastItem=breadcrumb_items[breadcrumb_items.length-1];
+			lastItem['data-action']= lasturl;
+			breadcrumb_items[breadcrumb_items.length-1]=lastItem;
+			breadcrumb_items.push({'text': text});
+			breadcrumb_items.reverse();
+			
+			//渲染breadcrumb
+			refreshBreadcrumb(breadcrumb_items);
+		}
 		/* 
 		$(document).ready(function(){
 			var pollingUrl="${ctx}/deferredResult/polling";

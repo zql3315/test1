@@ -61,14 +61,14 @@ jQuery(function($) {
 	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
 });
 jQuery.validator.addMethod("lettleLimitValidator", function(value, element) {
-	var reg = /^[a-zA-Z]{4,20}$/;
+	var reg = /^[a-zA-Z]+$/;
     return reg.test(value);   
-  }, "请输入4-20位的大小写字母");
+  }, "请输入合法英文字母");
 
 jQuery.validator.addMethod("lettleNumberValidator", function(value, element) {
-	var reg = /^[a-zA-Z][\w]{3,19}$/;
+	var reg = /^[a-zA-Z][\w]+$/;
     return reg.test(value);   
-  }, "请输入正确的字母或者数字.必须以字母开头，4-20位");
+  }, "请输入正确的字母或者数字.必须以字母开头");
 
 
 jQuery.validator.addMethod("telephoneValidator", function(value, element) {

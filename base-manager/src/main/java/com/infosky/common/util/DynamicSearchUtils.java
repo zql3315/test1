@@ -26,7 +26,6 @@ import com.infosky.common.query.jpa.Request;
 import com.infosky.common.query.jpa.SearchRequest;
 import com.infosky.common.query.jpa.Searchable;
 
-
 /**
  * 动态查询工具类
  * 
@@ -176,6 +175,13 @@ public abstract class DynamicSearchUtils {
                         case IN:
                             predicates.add(builder.and(expression.in((Object[]) request.getValue())));
                             break;
+                        case OR:
+                            Predicate predicate  = builder.or(predicates.toArray(new Predicate[predicates.size()]));
+                            predicates.clear();
+                            predicates.add(predicate);
+                            break;
+                        default:
+                            break;
                     }
                 }
 
@@ -228,47 +234,47 @@ public abstract class DynamicSearchUtils {
      * @param sql
      * @return
      */
-    public static String toDynamicSql(List<Request> params, StringBuffer sql) {
-        sql.insert(0, " select * from ( ");
-        sql.append(" ) v_ where 1=1 ");
+    public static String toDynamicSql(List<Request> params, String prefix, StringBuffer sql) {
         for (int i = 0; i < params.size(); i++) {
             Request request = params.get(i);
             switch (request.getOperator()) {
                 case ISNULL:
-                    sql.append(" and v_." + request.getFieldName() + " is null ");
+                    sql.append(" and " + prefix + request.getFieldName() + " is null ");
                     break;
                 case ISNOTNULL:
-                    sql.append(" and v_." + request.getFieldName() + " is not null ");
+                    sql.append(" and " + prefix + request.getFieldName() + " is not null ");
                     break;
                 case EQ:
-                    sql.append(" and v_." + request.getFieldName() + " = ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " = ? ");
                     break;
                 case NEQ:
-                    sql.append(" and v_." + request.getFieldName() + " <> ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " <> ? ");
                     break;
                 case LIKE:
-                    sql.append(" and v_." + request.getFieldName() + " like ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " like ? ");
                     break;
                 case PRELIKE:
-                    sql.append(" and v_." + request.getFieldName() + " like ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " like ? ");
                     break;
                 case SUFLIKE:
-                    sql.append(" and v_." + request.getFieldName() + " like ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " like ? ");
                     break;
                 case GT:
-                    sql.append(" and v_." + request.getFieldName() + "  > ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + "  > ? ");
                     break;
                 case LT:
-                    sql.append(" and v_." + request.getFieldName() + " < ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " < ? ");
                     break;
                 case GTE:
-                    sql.append(" and v_." + request.getFieldName() + " >= ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " >= ? ");
                     break;
                 case LTE:
-                    sql.append(" and v_." + request.getFieldName() + " <= ? ");
+                    sql.append(" and " + prefix + request.getFieldName() + " <= ? ");
                     break;
                 case IN:
-                    sql.append(" and v_." + request.getFieldName() + " in (?) ");
+                    sql.append(" and " + prefix + request.getFieldName() + " in (?) ");
+                case ORLIKE:
+                    sql.append(" or " + prefix + request.getFieldName() + " like ?  ");
                     break;
                 default:
                     break;

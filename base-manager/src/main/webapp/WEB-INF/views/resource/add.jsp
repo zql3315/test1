@@ -51,7 +51,7 @@
 							<div class="form-info-name"> 资源图标  </div>
 		
 							<div class="form-info-value">
-								<input type="text"  placeholder="资源图标" name="icons"class=" col-sm-5">
+								<input type="text"  placeholder="资源图标" value="fa-file-text-o" name="icons"class=" col-sm-5">
 							</div>
 						</div>
 						<div class="form-info-row">
@@ -84,8 +84,7 @@
 			</form>
 		</div>
 	</div>
-	<!-- validate -->
-	<script src="${ctx}/static/jquery-validation/1.11.1/messages_bs_zh.js"></script>
+	
 	<script type="text/javascript">
 
 		$(document).ready(function(){
@@ -100,14 +99,14 @@
 			$('#tableForm').validate({
 				rules:{
 						name:{required: true},
-						sn:{required: true,lettleLimitValidator:true},
+						sn:{required: true,lettleLimitValidator:true,minlength:3},
 						type:{required: true},
 						priority:{required: true,digits:true},
 						desciption:{required: true}
 				},
 				messages:{
 						name:{required: '请输入 资源名称'},
-						sn:{required: '请输入 资源简称',lettleLimitValidator:"请输入4-20位的大小写字母"},
+						sn:{required: '请输入 资源简称'},
 						type:{required: '请输入 资源类型'},
 						priority:{required: '请输入 资源优先级',digits:"去输入合法的整数"},
 						desciption:{required: '请输入 描述'}

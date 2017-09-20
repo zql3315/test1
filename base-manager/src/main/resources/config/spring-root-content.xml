@@ -14,28 +14,7 @@
 	<bean class="com.infosky.framework.web.WebUtil" lazy-init="false" />
 
 	<!-- 智能表单配置引入 -->
-	<!-- 框架核心功能 -->
-	<import resource="classpath*:spring/framework-spring-mvc-hibernate.xml" />
-	<!-- 系统功能 -->
-	<import resource="classpath*:spring/sys-spring-mvc-hibernate.xml" />
-	<!-- 日志功能 -->
-	<import resource="classpath*:spring/log-spring-mvc-hibernate.xml" />
-	<!-- 通知功能 -->
-	<import resource="classpath*:spring/notify-spring-mvc-hibernate.xml" />
-	<!-- 图表功能 -->
-	<import resource="classpath*:spring/report-spring-mvc-hibernate.xml" />
-	<!-- 任务功能 -->
-	<import resource="classpath*:spring/task-spring-mvc-hibernate.xml" />
-	<!-- 微信功能 -->
-	<import resource="classpath*:spring/weixin-spring-mvc-hibernate.xml" />
-	<!-- freemarker功能 -->
-	<import resource="classpath*:spring/freemarker-spring-mvc-hibernate.xml" />
-	<!-- 自动构建功能 -->
-	<import resource="classpath*:spring/build-spring-mvc-hibernate.xml" />
-	<!-- CMS功能 -->
-	<import resource="classpath*:spring/cms-spring-mvc-hibernate.xml" />
-	<!-- Demo功能 -->
-	<import resource="classpath*:spring/demo-spring-mvc-hibernate.xml" />
+	<import resource="classpath*:spring/*-spring-mvc-hibernate.xml" />
 	<!-- redis功能 -->
 	<import resource="classpath*:redis/*.xml" />
 </beans>

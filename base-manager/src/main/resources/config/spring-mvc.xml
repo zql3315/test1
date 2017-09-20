@@ -128,26 +128,6 @@
 	<!-- AOP核心功能 -->
 	<import resource="classpath*:spring/spring-mvc-aop.xml" />
 	<import resource="classpath*:spring/spring-mvc-shiro-aop.xml" />
-	<!-- 框架核心功能 -->
-	<import resource="classpath*:spring/framework-spring-mvc.xml" />
-	<!-- 系统功能 -->
-	<import resource="classpath*:spring/sys-spring-mvc.xml" />
-	<!-- 日志功能 -->
-	<import resource="classpath*:spring/log-spring-mvc.xml" />
-	<!-- 通知功能 -->
-	<import resource="classpath*:spring/notify-spring-mvc.xml" />
-	<!-- 图表功能 -->
-	<import resource="classpath*:spring/report-spring-mvc.xml" />
-	<!-- 任务功能 -->
-	<import resource="classpath*:spring/task-spring-mvc.xml" />
-	<!-- 微信功能 -->
-	<import resource="classpath*:spring/weixin-spring-mvc.xml" />
-	<!-- freemarker功能 -->
-	<import resource="classpath*:spring/freemarker-spring-mvc.xml" />
-	<!-- 自动构建功能 -->
-	<import resource="classpath*:spring/build-spring-mvc.xml" />
-	<!-- CMS功能 -->
-	<import resource="classpath*:spring/cms-spring-mvc.xml" />
-	<!-- Demo功能 -->
-	<import resource="classpath*:spring/demo-spring-mvc.xml" />
+	<!-- 功能模块 -->
+	<import resource="classpath*:spring/*-spring-mvc.xml" />
 </beans>

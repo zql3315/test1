@@ -2,7 +2,6 @@ package com.infosky.sys.entity.po;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -31,35 +30,30 @@ public class Resource extends PO<String> {
     /**
      * 资源名称
      */
-    @Column(name = "NAME")
     @Comment("资源名称")
     private String name;
 
     /**
      * 资源类型 1 目录 2 页面 3 元素
      */
-    @Column(name = "TYPE")
     @Comment("资源类型 1 目录 2 页面 3 元素")
     private String type;
 
     /**
      * 资源URL
      */
-    @Column(name = "URL")
     @Comment("资源URL")
     private String url;
 
     /**
      * 资源图标
      */
-    @Column(name = "ICONS")
     @Comment("资源图标")
     private String icons;
 
     /**
      * 描述
      */
-    @Column(name = "DESCRIPTION")
     @Comment("描述")
     private String description;
 
@@ -76,13 +70,11 @@ public class Resource extends PO<String> {
     /**
      * 资源简称
      */
-    @Column(name = "SN")
     private String sn;
 
     /**
      * 资源优先级
      */
-    @Column(name = "PRIORITY")
     private int priority;
 
     /**

@@ -7,6 +7,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 
 import com.infosky.common.query.jpa.Operator;
 import com.infosky.common.query.jpa.SearchRequest;
@@ -36,14 +37,30 @@ public class AreaTag extends SimpleTagSupport {
 
     private String value;
 
+    /**
+     * 占位字符串
+     */
     private String placeholder;
 
+    /**
+     * 第一个是否可以为空
+     */
     private Boolean firstIsBlank;
 
     /**
      * 区域层级
      */
     private String level;
+
+    /**
+     * 父id
+     */
+    private String pid;
+
+    /**
+     * 是否多选
+     */
+    private int isMultiple;
 
     /**
      * 是否热门
@@ -61,11 +78,20 @@ public class AreaTag extends SimpleTagSupport {
         if (isHot > -1) {
             searchable.addSearchParam("isHot", Operator.EQ, isHot);
         }
-        Collection<AreaDTO> dics = service.findAll(searchable);
+
+        if (StringUtils.isNotBlank(pid)) {
+            searchable.addSearchParam("parent.id", Operator.EQ, pid);
+        }
+        Sort sort = new Sort(Sort.Direction.DESC, "weight");
+        Collection<AreaDTO> dics = service.findAll(searchable, sort);
 
         StringBuffer buff = new StringBuffer();
 
         buff.append("<select class=\"" + _class + "\" id=\"" + id + "\"");
+
+        if (isMultiple > 0) {
+            buff.append(" multiple ");
+        }
 
         if (name != null) {
             buff.append(" name=\"" + name + "\"");
@@ -87,6 +113,8 @@ public class AreaTag extends SimpleTagSupport {
             // value为空时判断是否有默认值
             if (StringUtils.isNotEmpty(value) && value.equals(areaDTO.getName())) {
                 buff.append("selected");
+            } else if (StringUtils.isNotEmpty(value) && value.equals(areaDTO.getId())) {
+                buff.append("selected");
             }
 
             buff.append(">" + areaDTO.getName() + "</option>");
@@ -97,12 +125,28 @@ public class AreaTag extends SimpleTagSupport {
         getJspContext().getOut().write(buff.toString());
     }
 
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
     public int getIsHot() {
         return isHot;
     }
 
     public void setIsHot(int isHot) {
         this.isHot = isHot;
+    }
+
+    public int getIsMultiple() {
+        return isMultiple;
+    }
+
+    public void setIsMultiple(int isMultiple) {
+        this.isMultiple = isMultiple;
     }
 
     /**

@@ -236,4 +236,52 @@
 			<required>false</required>
 		</attribute>
 	</tag>
+	<tag>
+		<description>区域列表</description>
+		<name>selectArea</name>
+		<tag-class>com.infosky.sys.web.tag.AreaTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>_class</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>isMultiple</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>level</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>isHot</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>firstIsBlank</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>placeholder</name>
+			<required>false</required>
+		</attribute>
+	</tag>
 </taglib>

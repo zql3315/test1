@@ -6,7 +6,7 @@
 		<version>1.0</version>
 		<artifactId>xtkj</artifactId>
 	</parent>
-	<artifactId>newmedia</artifactId>
+	<artifactId>base-manager</artifactId>
 	<packaging>war</packaging>
 	<name>base-manager</name>
 	<dependencies>
@@ -410,6 +410,11 @@
 		<dependency>
 			<groupId>archermind</groupId>
 			<artifactId>framework</artifactId>
+		</dependency>
+		<!-- 自动构建 -->
+		<dependency>
+			<groupId>archermind</groupId>
+			<artifactId>base-build</artifactId>
 			<version>0.1</version>
 		</dependency>
 	</dependencies>

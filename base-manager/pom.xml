@@ -409,13 +409,16 @@
 		<!-- 框架包 -->
 		<dependency>
 			<groupId>archermind</groupId>
-			<artifactId>framework</artifactId>
+			<artifactId>base-framework</artifactId>
+			<version>0.1</version>
+			<type>jar</type>
 		</dependency>
 		<!-- 自动构建 -->
 		<dependency>
 			<groupId>archermind</groupId>
 			<artifactId>base-build</artifactId>
 			<version>0.1</version>
+			<type>jar</type>
 		</dependency>
 	</dependencies>
 	<build>
@@ -430,8 +433,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.6</version>
+					<version>2.16</version>
 					<configuration>
+						<!-- 解决单元测试输出中文乱码异常问题 -->
+						<forkMode>once</forkMode>
+						<argLine>-Dfile.encoding=UTF-8</argLine>
 						<!-- 单元测试失败依然打包 true -->
 						<testFailureIgnore>false</testFailureIgnore>
 						<!--打包 跳过测试 true -->
@@ -443,16 +449,6 @@
 						<excludes>
 							<exclude>**/TestConstants.java</exclude>
 						</excludes>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.16</version>
-					<!-- 解决单元测试输出中文乱码异常问题 -->
-					<configuration>
-						<forkMode>once</forkMode>
-						<argLine>-Dfile.encoding=UTF-8</argLine>
 					</configuration>
 				</plugin>
 				<plugin>

@@ -6,7 +6,7 @@
 		<version>1.0</version>
 		<artifactId>xtkj</artifactId>
 	</parent>
-	<artifactId>framework</artifactId>
+	<artifactId>base-framework</artifactId>
 	<packaging>jar</packaging>
 	<name>base-framework</name>
 	<version>0.1</version>

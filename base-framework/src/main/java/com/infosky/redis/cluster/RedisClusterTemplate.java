@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
 import redis.clients.jedis.JedisCluster;
@@ -26,8 +25,15 @@ public class RedisClusterTemplate extends AbsRedisUtilsServiceAdapter {
 
     private static Logger log = LoggerFactory.getLogger(RedisClusterTemplate.class);
 
-    @Autowired
     private JedisCluster jedisCluster;
+
+    public JedisCluster getJedisCluster() {
+        return jedisCluster;
+    }
+
+    public void setJedisCluster(JedisCluster jedisCluster) {
+        this.jedisCluster = jedisCluster;
+    }
 
     /**
      * 添加.

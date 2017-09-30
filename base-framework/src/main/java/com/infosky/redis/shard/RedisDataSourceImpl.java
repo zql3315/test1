@@ -2,8 +2,6 @@ package com.infosky.redis.shard;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
@@ -14,13 +12,19 @@ import redis.clients.jedis.ShardedJedisPool;
  * 
  * @author n004881
  */
-@Repository("redisDataSource")
 public class RedisDataSourceImpl implements RedisDataSource {
 
     private static final Logger log = LoggerFactory.getLogger(RedisDataSourceImpl.class);
 
-    @Autowired
     private ShardedJedisPool shardedJedisPool;
+
+    public ShardedJedisPool getShardedJedisPool() {
+        return shardedJedisPool;
+    }
+
+    public void setShardedJedisPool(ShardedJedisPool shardedJedisPool) {
+        this.shardedJedisPool = shardedJedisPool;
+    }
 
     /**
      * //TODO 添加override说明

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -22,7 +21,6 @@ public class JedisTemplate extends AbsRedisUtilsServiceAdapter {
 
     private Logger logger = LoggerFactory.getLogger(JedisTemplate.class);
 
-    @Autowired
     private JedisPool jedisPool;
 
     /**
@@ -260,4 +258,15 @@ public class JedisTemplate extends AbsRedisUtilsServiceAdapter {
             jedis.close();
         }
     }
+
+    
+    public JedisPool getJedisPool() {
+        return jedisPool;
+    }
+
+    
+    public void setJedisPool(JedisPool jedisPool) {
+        this.jedisPool = jedisPool;
+    }
+    
 }

@@ -14,17 +14,7 @@
 
 	<!-- 智能表单配置引入 -->
 	<!-- 框架核心功能 -->
-	<import resource="classpath*:spring/framework-spring-mvc-hibernate.xml" />
-	<!-- 系统功能 -->
-	<import resource="classpath*:spring/sys-spring-mvc-hibernate.xml" />
-	<!-- 日志功能 -->
-	<!-- <import resource="classpath*:spring/log-spring-mvc-hibernate.xml" /> -->
-	<!-- 微信功能 -->
-	<import resource="classpath*:spring/weixin-spring-mvc-hibernate.xml" />
-	<!-- freemarker功能 -->
-	<!-- <import resource="classpath*:spring/freemarker-spring-mvc-hibernate.xml" /> -->
-	<!-- Demo功能 -->
-	<import resource="classpath*:spring/demo-spring-mvc-hibernate.xml" />
+	<import resource="classpath*:spring/*-spring-mvc-hibernate.xml" />
 	<!-- redis功能 -->
 	<import resource="classpath*:redis/*.xml" />
 </beans>

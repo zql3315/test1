@@ -106,14 +106,7 @@
 
 	<!-- 智能表单配置引入 -->
 	<!-- AOP核心功能 -->
-	<!-- <import resource="classpath*:spring/spring-mvc-aop.xml" /> -->
+	<import resource="classpath*:spring/spring-mvc-aop.xml" />
 	<import resource="classpath*:spring/spring-mvc-shiro-aop.xml" />
-	<!-- 框架核心功能 -->
-	<import resource="classpath*:spring/framework-spring-mvc.xml" />
-	<!-- 系统功能 -->
-	<import resource="classpath*:spring/sys-spring-mvc.xml" />
-	<!-- 微信功能 -->
-	<import resource="classpath*:spring/weixin-spring-mvc.xml" />
-	<!-- Demo功能 -->
-	<import resource="classpath*:spring/demo-spring-mvc.xml" />
+	<import resource="classpath*:spring/*-spring-mvc.xml" />
 </beans>

@@ -331,7 +331,7 @@
 		/**
 		* 重置导航
 		*/
-		var setBreadcrumb = function(lasturl, text) {
+		function setBreadcrumb(lasturl, text) {
 			if(!text) {
 				text = "";
 			}
@@ -343,6 +343,24 @@
 			lastItem['data-action']= lasturl;
 			breadcrumb_items[breadcrumb_items.length-1]=lastItem;
 			breadcrumb_items.push({'text': text});
+			breadcrumb_items.reverse();
+			
+			//渲染breadcrumb
+			refreshBreadcrumb(breadcrumb_items);
+		}
+		/**
+		* 导航后退
+		* @step 后退几步
+		*/
+		function backBreadcrumb(step) {
+			if(!step) {
+				step=1;
+			}
+			var breadcrumb_items = getBreadcrumb();
+			breadcrumb_items.reverse();
+			breadcrumb_items.pop();
+			var lastItem=breadcrumb_items[breadcrumb_items.length-1];
+			lastItem['data-action']= "javascript:;";
 			breadcrumb_items.reverse();
 			
 			//渲染breadcrumb
